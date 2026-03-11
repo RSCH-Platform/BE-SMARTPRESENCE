@@ -12,7 +12,7 @@ class EmployeeController extends Controller
     public function index()
     {
         try {
-            $result = Employee::latest()->get();
+            $result = Employee::latest()->paginate(50);
             return response()->json([
                 'message' => 'Employees fetched successfully',
                 'data' => $result,
@@ -26,10 +26,11 @@ class EmployeeController extends Controller
     {
         try {
             $request = $request->validated();
+            $request['password'] = bcrypt($request['password']);
             $result = Employee::create($request);
             return response()->json([
-                'message' => 'Employee created successfully',
-                'data' => $result,
+            'message' => 'Employee created successfully',
+            'data' => $result,
             ], 201);
         }catch (Exception $e) {
             return response()->json(['message' => 'An error occurred while creating employee', 'error' => $e->getMessage()], 500);
@@ -44,6 +45,11 @@ class EmployeeController extends Controller
                 return response()->json([
                     'message' => 'Employee not found'
                 ], 404);
+            }
+            if($result->role_id === 1) {
+                return response()->json([
+                    'message' => 'Access denied'
+                ], 403);
             }
             return response()->json([
                 'message' => 'Employee fetched successfully',
@@ -78,7 +84,7 @@ class EmployeeController extends Controller
     public function destroy(string $id)
     {
         try{
-            $result = Employee::find($id);
+            $result = Employee::findOrFail($id);
             if (!$result) {
                 return response()->json([
                     'message' => 'Employee not found'

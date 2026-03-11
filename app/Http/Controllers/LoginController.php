@@ -26,4 +26,9 @@ class LoginController extends Controller
             return response()->json(['message' => 'An error occurred while authenticating', 'error' => $e->getMessage()], 500);
         }
     }
+
+    public function logout()
+    {
+        // Implement logout functionality if needed
+    }
 }

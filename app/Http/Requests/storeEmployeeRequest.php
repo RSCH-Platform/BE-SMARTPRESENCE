@@ -11,7 +11,7 @@ class storeEmployeeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,15 +22,14 @@ class storeEmployeeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'full_name' => 'required',
-            'nip' => 'required|unique:employees',
-            'employee_type_id' => 'required|exists:employee_types,id',
-            'work_unit_id' => 'required|exists:work_units,id',
-            'position_id' => 'required|exists:positions,id',
-            'email' => 'required|email|unique:employees',
-            'phone' => 'nullable',
-            'signature_path' => 'nullable',
-            'is_active' => 'boolean'
+            'full_name' => 'required|string',
+            'nip' => 'required|string',
+            'employee_type_id' => 'required|integer',
+            'work_unit_id' => 'required|integer',
+            'position_id' => 'required|integer',
+            'email' => 'required|email',
+            'phone' => 'required|string',
+            'is_active' => 'required|boolean'
         ];
     }
 }

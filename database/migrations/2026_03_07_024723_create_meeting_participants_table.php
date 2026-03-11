@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('meeting_participants', function (Blueprint $table) {
             $table->id();
             $table->foreignId('meeting_id')->constrained('meetings');
-            $table->foreignId('employee_id')->constrained('employees');
+            $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete();
             $table->timestamp('created_at')->useCurrent();
 
             $table->unique(['meeting_id','employee_id']);

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class storeAuthRequest extends FormRequest
+class storeMeetingRoomRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,10 @@ class storeAuthRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => 'required',
-            'password' => 'required'
+            'name' => 'required|unique:meeting_rooms,name',
+            'location' => 'required|string',
+            'capacity' => 'required|integer|min:5',
+            'is_active' => 'required|boolean',
         ];
     }
 }
