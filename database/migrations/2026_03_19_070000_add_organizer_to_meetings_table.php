@@ -31,7 +31,7 @@ return new class extends Migration
     {
         Schema::table('meetings', function (Blueprint $table) {
             $table->dropColumn('organizer');
-            $table->string('status', 20)->default('scheduled')->change();
+            $table->string('status', 20)->default('menunggu')->change();
         });
     }
 };

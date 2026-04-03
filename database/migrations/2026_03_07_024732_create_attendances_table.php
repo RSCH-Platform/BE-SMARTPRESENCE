@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('meeting_id')->constrained('meetings');
             $table->foreignId('employee_id')->constrained('employees');
             $table->dateTime('check_in_time');
-            $table->string('status',20)->default('present');
+            $table->string('status',20)->default('hadir');
             $table->foreignId('verified_by')->nullable()->constrained('users');
             $table->text('notes')->nullable();
             $table->timestamps();
