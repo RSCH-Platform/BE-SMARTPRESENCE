@@ -206,6 +206,12 @@ class MeetingController extends Controller
                 'end_time'   => $validated['end_time'] ?? $meeting->end_time,
             ]);
 
+            // Re-evaluate the status after times are updated
+            $this->autoUpdateStatuses($meeting->id);
+
+            // Fetch fresh status for the rest of the flow
+            $meeting->refresh();
+
             // Update participants if provided and not ongoing
             $hasParticipantChanges = isset($validated['participant_employee_ids']) || isset($validated['participant_work_unit_ids']);
             if ($hasParticipantChanges && $meeting->status !== 'berlangsung') {
@@ -461,7 +467,7 @@ class MeetingController extends Controller
     {
         $now = Carbon::now();
 
-        $query = Meeting::whereIn('status', ['menunggu', 'berlangsung']);
+        $query = Meeting::where('status', '!=', 'dibatalkan');
 
         if ($meetingId) {
             $query->where('id', $meetingId);

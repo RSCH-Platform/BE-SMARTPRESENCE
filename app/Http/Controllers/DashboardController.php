@@ -118,7 +118,7 @@ class DashboardController extends Controller
         $now = Carbon::now();
 
         $meetings = Meeting::whereDate('start_time', $date)
-            ->whereIn('status', ['menunggu', 'berlangsung'])
+            ->where('status', '!=', 'dibatalkan')
             ->get();
 
         foreach ($meetings as $meeting) {

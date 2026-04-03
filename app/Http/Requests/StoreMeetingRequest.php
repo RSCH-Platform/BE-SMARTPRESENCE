@@ -14,6 +14,20 @@ class StoreMeetingRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation()
+    {
+        $mergeData = [];
+        if ($this->has('start_time')) {
+            $mergeData['start_time'] = \Carbon\Carbon::parse($this->input('start_time'))->setTimezone('Asia/Jakarta')->format('Y-m-d H:i:s');
+        }
+        if ($this->has('end_time')) {
+            $mergeData['end_time'] = \Carbon\Carbon::parse($this->input('end_time'))->setTimezone('Asia/Jakarta')->format('Y-m-d H:i:s');
+        }
+        if (!empty($mergeData)) {
+            $this->merge($mergeData);
+        }
+    }
+
     public function rules(): array
     {
         return [
@@ -38,11 +52,12 @@ class StoreMeetingRequest extends FormRequest
 
             // Check room conflict: same room, overlapping time
             $roomId    = $this->input('room_id');
+            // Already parsed in prepareForValidation
             $startTime = $this->input('start_time');
             $endTime   = $this->input('end_time');
 
             $conflict = Meeting::where('room_id', $roomId)
-                ->where('status', '!=', 'selesai')
+                ->where('status', '!=', 'dibatalkan') // Do not exclude selesai, to prevent overlap with past finalized meetings
                 ->where(function ($query) use ($startTime, $endTime) {
                     $query->where(function ($q) use ($startTime, $endTime) {
                         $q->where('start_time', '<', $endTime)

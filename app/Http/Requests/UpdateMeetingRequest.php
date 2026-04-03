@@ -14,6 +14,20 @@ class UpdateMeetingRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation()
+    {
+        $mergeData = [];
+        if ($this->has('start_time')) {
+            $mergeData['start_time'] = \Carbon\Carbon::parse($this->input('start_time'))->setTimezone('Asia/Jakarta')->format('Y-m-d H:i:s');
+        }
+        if ($this->has('end_time')) {
+            $mergeData['end_time'] = \Carbon\Carbon::parse($this->input('end_time'))->setTimezone('Asia/Jakarta')->format('Y-m-d H:i:s');
+        }
+        if (!empty($mergeData)) {
+            $this->merge($mergeData);
+        }
+    }
+
     public function rules(): array
     {
         return [
@@ -51,14 +65,16 @@ class UpdateMeetingRequest extends FormRequest
                 return;
             }
 
+            // Already parsed in prepareForValidation or fallback to meeting's time
+            $startTime = $this->has('start_time') ? $this->input('start_time') : $meeting->start_time;
+            $endTime   = $this->has('end_time') ? $this->input('end_time') : $meeting->end_time;
+
             // Check room conflict (exclude current meeting)
             $roomId    = $this->input('room_id', $meeting->room_id);
-            $startTime = $this->input('start_time', $meeting->start_time);
-            $endTime   = $this->input('end_time', $meeting->end_time);
 
             $conflict = Meeting::where('room_id', $roomId)
                 ->where('id', '!=', $meetingId)
-                ->where('status', '!=', 'selesai')
+                ->where('status', '!=', 'dibatalkan') // Do not exclude selesai
                 ->where(function ($query) use ($startTime, $endTime) {
                     $query->where(function ($q) use ($startTime, $endTime) {
                         $q->where('start_time', '<', $endTime)
