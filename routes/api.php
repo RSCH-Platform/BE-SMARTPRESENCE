@@ -11,6 +11,7 @@ use App\Http\Controllers\MeetingsRoomController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmployeeImportExportController;
+use App\Http\Controllers\WorkUnitController;
 
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -49,6 +50,13 @@ Route::post('/meeting-room', [MeetingsRoomController::class, 'store']);
 Route::patch('/meeting-room/{id}', [MeetingsRoomController::class, 'update']);
 Route::patch('/meeting-room/{id}/toggle-status', [MeetingsRoomController::class, 'toggleStatus']);
 Route::delete('/meeting-room/{id}', [MeetingsRoomController::class, 'destroy']);
+
+// Route for work units
+Route::get('/work-units-manage', [WorkUnitController::class, 'index']);
+Route::get('/work-unit/{id}', [WorkUnitController::class, 'show']);
+Route::post('/work-unit', [WorkUnitController::class, 'store']);
+Route::patch('/work-unit/{id}', [WorkUnitController::class, 'update']);
+Route::delete('/work-unit/{id}', [WorkUnitController::class, 'destroy']);
 
 // Route for meetings
 Route::get('/meetings', [MeetingController::class, 'index']);
