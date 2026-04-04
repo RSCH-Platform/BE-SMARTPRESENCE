@@ -19,7 +19,7 @@ class EmployeesExport implements FromCollection, WithHeadings, WithMapping, Shou
     */
     public function collection()
     {
-        return Employee::with(['employeeType', 'workUnit', 'position'])->latest()->get();
+        return Employee::with(['employeeType', 'workUnit'])->latest()->get();
     }
 
     public function headings(): array
@@ -32,7 +32,6 @@ class EmployeesExport implements FromCollection, WithHeadings, WithMapping, Shou
             'No. HP',
             'Jenis Tenaga',
             'Unit Kerja',
-            'Jabatan',
             'Status Aktif'
         ];
     }
@@ -49,7 +48,7 @@ class EmployeesExport implements FromCollection, WithHeadings, WithMapping, Shou
             $employee->phone,
             $employee->employeeType ? $employee->employeeType->employee_type : '-',
             $employee->workUnit ? $employee->workUnit->work_unit : '-',
-            $employee->position ? $employee->position->position : '-',
+
             $employee->is_active ? 'Aktif' : 'Non-Aktif',
         ];
     }

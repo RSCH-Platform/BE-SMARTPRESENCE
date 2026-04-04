@@ -5,7 +5,7 @@ namespace App\Imports;
 use App\Models\Employee;
 use App\Models\EmployeeType;
 use App\Models\WorkUnit;
-use App\Models\Position;
+
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Illuminate\Support\Str;
@@ -14,14 +14,14 @@ class EmployeesImport implements ToModel, WithHeadingRow
 {
     private $employeeTypes;
     private $workUnits;
-    private $positions;
+
 
     public function __construct()
     {
         // Cache data untuk performa lebih baik saat lookup ribuan baris
         $this->employeeTypes = EmployeeType::all()->pluck('id', 'employee_type')->toArray();
         $this->workUnits = WorkUnit::all()->pluck('id', 'work_unit')->toArray();
-        $this->positions = Position::all()->pluck('id', 'position')->toArray();
+
     }
 
     /**
@@ -45,8 +45,7 @@ class EmployeesImport implements ToModel, WithHeadingRow
         $workUnitName = trim($row['unit_kerja'] ?? '');
         $workUnitId = $this->workUnits[$workUnitName] ?? null;
 
-        $positionName = trim($row['jabatan'] ?? '');
-        $positionId = $this->positions[$positionName] ?? 1;
+
 
         $isActive = true;
         $statusStr = strtolower(trim($row['status_aktif'] ?? 'aktif'));
@@ -65,7 +64,7 @@ class EmployeesImport implements ToModel, WithHeadingRow
                 'phone' => trim($row['no_hp'] ?? null),
                 'employee_type_id' => $employeeTypeId,
                 'work_unit_id' => $workUnitId,
-                'position_id' => $positionId,
+
                 'is_active' => $isActive,
             ]);
             return null; // Return null agar ToModel tidak mencoba membuat record lagi
@@ -78,7 +77,7 @@ class EmployeesImport implements ToModel, WithHeadingRow
             'phone' => trim($row['no_hp'] ?? null),
             'employee_type_id' => $employeeTypeId,
             'work_unit_id' => $workUnitId,
-            'position_id' => $positionId,
+
             'is_active' => $isActive,
         ]);
     }

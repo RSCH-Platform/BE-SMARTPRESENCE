@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('positions', function (Blueprint $table) {
-            $table->id();
-            $table->string('position', 100);
-            $table->timestamps();
+        Schema::table('employees', function (Blueprint $table) {
+            $table->dropForeign(['position_id']);
+            $table->dropColumn('position_id');
         });
     }
 
@@ -23,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('positions');
+        Schema::table('employees', function (Blueprint $table) {
+            $table->foreignId('position_id')->nullable()->constrained('positions');
+        });
     }
 };

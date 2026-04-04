@@ -30,7 +30,7 @@ class MeetingController extends Controller
             // Auto-update statuses before listing
             $this->autoUpdateStatuses();
 
-            $query = Meeting::with(['room', 'participants.employee.workUnit', 'participants.employee.position']);
+            $query = Meeting::with(['room', 'participants.employee.workUnit']);
 
             // Search berdasarkan judul
             if ($request->filled('search')) {
@@ -108,7 +108,7 @@ class MeetingController extends Controller
                 ]);
             }
 
-            $meeting->load(['room', 'participants.employee.workUnit', 'participants.employee.position']);
+            $meeting->load(['room', 'participants.employee.workUnit']);
             $meeting->participant_count = $meeting->participants->count();
 
             return response()->json([
@@ -135,7 +135,6 @@ class MeetingController extends Controller
             $meeting = Meeting::with([
                 'room',
                 'participants.employee.workUnit',
-                'participants.employee.position',
                 'attendances.employee',
             ])->find($id);
 
@@ -238,7 +237,7 @@ class MeetingController extends Controller
                 }
             }
 
-            $meeting->load(['room', 'participants.employee.workUnit', 'participants.employee.position']);
+            $meeting->load(['room', 'participants.employee.workUnit']);
             $meeting->participant_count = $meeting->participants->count();
 
             return response()->json([
@@ -328,7 +327,7 @@ class MeetingController extends Controller
                 return response()->json([
                     'message' => 'Karyawan sudah diabsenkan sebelumnya',
                     'data'    => [
-                        'employee'   => $employee->load(['workUnit', 'position']),
+                        'employee'   => $employee->load(['workUnit']),
                         'attendance' => $existingAttendance,
                     ],
                 ], 200);
@@ -343,7 +342,7 @@ class MeetingController extends Controller
                 'verified_by'   => auth()->id() ?? null,
             ]);
 
-            $employee->load(['workUnit', 'position']);
+            $employee->load(['workUnit']);
 
             return response()->json([
                 'message' => 'Absensi berhasil dicatat',
@@ -400,7 +399,7 @@ class MeetingController extends Controller
                     $existingAttendance->delete();
                 }
                 
-                $participant->load(['employee.workUnit', 'employee.position']);
+                $participant->load(['employee.workUnit']);
                 
                 return response()->json([
                     'message' => 'Status kehadiran berhasil diubah menjadi tidak hadir',
@@ -428,7 +427,7 @@ class MeetingController extends Controller
                 'notes'         => 'Manual attendance',
             ]);
 
-            $participant->load(['employee.workUnit', 'employee.position']);
+            $participant->load(['employee.workUnit']);
 
             return response()->json([
                 'message' => 'Absensi manual berhasil dicatat',
