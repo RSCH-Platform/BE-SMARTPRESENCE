@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('room_id')->constrained('meeting_rooms');
             $table->dateTime('start_time');
             $table->dateTime('end_time');
-            $table->string('status',20)->default('scheduled');
+            $table->string('status',20)->default('menunggu');
             $table->foreignId('created_by')->constrained('users');
             $table->timestamps();
         });

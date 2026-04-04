@@ -18,33 +18,40 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         try {
-            $date = $request->query('date', Carbon::today()->toDateString());
+            $requestedDate = $request->query('date', Carbon::today()->toDateString());
+            $todayDate = Carbon::today()->toDateString();
 
-            // statistik
+            // Auto-update meeting statuses based on current time
+            $this->autoUpdateStatuses($todayDate);
+            if ($requestedDate !== $todayDate) {
+                $this->autoUpdateStatuses($requestedDate);
+            }
+
+            // statistik - Always use today
             $totalEmployees = Employee::where('is_active', true)->count();
-            $meetingsToday = Meeting::whereDate('start_time', $date)->count();
-            $meetingsPending = Meeting::whereDate('start_time', $date)
-                ->where('status', 'scheduled')
+            $meetingsToday = Meeting::whereDate('start_time', $todayDate)->count();
+            $meetingsPending = Meeting::whereDate('start_time', $todayDate)
+                ->where('status', 'menunggu')
                 ->count();
-            $meetingsCompleted = Meeting::whereDate('start_time', $date)
-                ->where('status', 'completed')
+            $meetingsCompleted = Meeting::whereDate('start_time', $todayDate)
+                ->where('status', 'selesai')
                 ->count();
 
-            // Rapat hari ini dengan detail
-            $todaysMeetings = Meeting::whereDate('start_time', $date)
+            // Rapat hari ini dengan detail - Always use today
+            $todaysMeetings = Meeting::whereDate('start_time', $todayDate)
                 ->with(['room:id,name,location', 'creator:id,username', 'participants', 'attendances'])
                 ->orderBy('start_time', 'asc')
                 ->get()
                 ->map(function ($meeting) {
                     $participantsCount = $meeting->participants->count();
-                    $attendancePresent = $meeting->attendances->where('status', 'present')->count();
+                    $attendancePresent = $meeting->attendances->where('status', 'hadir')->count();
                     $attendanceAbsent = $participantsCount - $attendancePresent;
 
                     return [
                         'id' => $meeting->id,
                         'title' => $meeting->title,
-                        'start_time' => $meeting->start_time,
-                        'end_time' => $meeting->end_time,
+                        'start_time' => $meeting->start_time->toIso8601String(),
+                        'end_time' => $meeting->end_time->toIso8601String(),
                         'status' => $meeting->status,
                         'room' => $meeting->room,
                         'creator' => $meeting->creator,
@@ -54,10 +61,10 @@ class DashboardController extends Controller
                     ];
                 });
 
-            // Penggunaan ruang
+            // Penggunaan ruang (Uses requested timeline date)
             $roomUsage = MeetingRoom::where('is_active', true)
-                ->with(['meetings' => function ($query) use ($date) {
-                    $query->whereDate('start_time', $date)
+                ->with(['meetings' => function ($query) use ($requestedDate) {
+                    $query->whereDate('start_time', $requestedDate)
                         ->select('id', 'title', 'room_id', 'start_time', 'end_time', 'status')
                         ->orderBy('start_time', 'asc');
                 }])
@@ -70,8 +77,8 @@ class DashboardController extends Controller
                             return [
                                 'id' => $meeting->id,
                                 'title' => $meeting->title,
-                                'start_time' => $meeting->start_time,
-                                'end_time' => $meeting->end_time,
+                                'start_time' => $meeting->start_time->toIso8601String(),
+                                'end_time' => $meeting->end_time->toIso8601String(),
                                 'status' => $meeting->status,
                             ];
                         }),
@@ -81,7 +88,7 @@ class DashboardController extends Controller
             return response()->json([
                 'message' => 'Dashboard data fetched successfully',
                 'data' => [
-                    'date' => $date,
+                    'date' => $todayDate,
                     'summary' => [
                         'total_employees' => $totalEmployees,
                         'meetings_today' => $meetingsToday,
@@ -97,6 +104,37 @@ class DashboardController extends Controller
                 'message' => 'An error occurred while fetching dashboard data',
                 'error' => $e->getMessage(),
             ], 500);
+        }
+    }
+
+    /**
+     * Auto-update meeting statuses based on current time.
+     * - menunggu:     now < start_time
+     * - berlangsung:  start_time <= now <= end_time
+     * - selesai:      now > end_time
+     */
+    private function autoUpdateStatuses(string $date)
+    {
+        $now = Carbon::now();
+
+        $meetings = Meeting::whereDate('start_time', $date)
+            ->where('status', '!=', 'dibatalkan')
+            ->get();
+
+        foreach ($meetings as $meeting) {
+            $newStatus = $meeting->status;
+
+            if ($now->greaterThan($meeting->end_time)) {
+                $newStatus = 'selesai';
+            } elseif ($now->greaterThanOrEqualTo($meeting->start_time) && $now->lessThanOrEqualTo($meeting->end_time)) {
+                $newStatus = 'berlangsung';
+            } else {
+                $newStatus = 'menunggu';
+            }
+
+            if ($newStatus !== $meeting->status) {
+                $meeting->update(['status' => $newStatus]);
+            }
         }
     }
 }

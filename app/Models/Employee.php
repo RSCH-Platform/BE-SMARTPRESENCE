@@ -11,7 +11,6 @@ class Employee extends Model
         'nip',
         'employee_type_id',
         'work_unit_id',
-        'position_id',
         'email',
         'phone',
         'signature_path',
@@ -29,9 +28,5 @@ class Employee extends Model
     public function workUnit()
     {
         return $this->belongsTo(WorkUnit::class);
-    }
-    public function position()
-    {
-        return $this->belongsTo(Position::class);
     }
 }

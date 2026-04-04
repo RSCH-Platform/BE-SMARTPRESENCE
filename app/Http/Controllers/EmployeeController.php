@@ -24,7 +24,7 @@ class EmployeeController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = Employee::with(['employeeType', 'workUnit', 'position']);
+            $query = Employee::with(['employeeType', 'workUnit']);
 
             // Search berdasarkan nama atau NIP
             if ($request->filled('search')) {
@@ -68,7 +68,7 @@ class EmployeeController extends Controller
         try {
             $validated = $request->validated();
             $result = Employee::create($validated);
-            $result->load(['employeeType', 'workUnit', 'position']);
+            $result->load(['employeeType', 'workUnit']);
 
             return response()->json([
                 'message' => 'Employee created successfully',
@@ -88,7 +88,7 @@ class EmployeeController extends Controller
     public function show(string $id)
     {
         try {
-            $result = Employee::with(['employeeType', 'workUnit', 'position'])->find($id);
+            $result = Employee::with(['employeeType', 'workUnit'])->find($id);
             if (!$result) {
                 return response()->json([
                     'message' => 'Employee not found',
@@ -122,7 +122,7 @@ class EmployeeController extends Controller
 
             $validated = $request->validated();
             $result->update($validated);
-            $result->load(['employeeType', 'workUnit', 'position']);
+            $result->load(['employeeType', 'workUnit']);
 
             return response()->json([
                 'message' => 'Employee updated successfully',
