@@ -75,16 +75,7 @@ class SmartPresenceSeeder extends Seeder
             ['id'=>3,'work_unit'=>'Administrasi']
         ]);
 
-        /*
-        |--------------------------------------------------------------------------
-        | POSITIONS
-        |--------------------------------------------------------------------------
-        */
-        DB::table('positions')->insert([
-            ['id'=>1,'position'=>'Dokter Umum'],
-            ['id'=>2,'position'=>'Perawat'],
-            ['id'=>3,'position'=>'Staff Admin']
-        ]);
+
 
 
         /*
@@ -99,7 +90,6 @@ class SmartPresenceSeeder extends Seeder
                 'nip'=>'EMP001',
                 'employee_type_id'=> 1,
                 'work_unit_id'=> 1,
-                'position_id'=> 1,
                 'email'=>'budi@hospital.com',
                 'phone'=>'08123456789',
                 'is_active'=>true,
@@ -111,7 +101,6 @@ class SmartPresenceSeeder extends Seeder
                 'nip'=>'EMP002',
                 'employee_type_id'=> 2,
                 'work_unit_id'=> 2,
-                'position_id'=> 2,
                 'email'=>'siti@hospital.com',
                 'phone'=>'08123456788',
                 'is_active'=>true,
@@ -123,7 +112,6 @@ class SmartPresenceSeeder extends Seeder
                 'nip'=>'EMP003',
                 'employee_type_id'=> 3,
                 'work_unit_id'=> 3,
-                'position_id'=> 3,
                 'email'=>'andi@hospital.com',
                 'phone'=>'08123456787',
                 'is_active'=>true,
