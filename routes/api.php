@@ -12,6 +12,7 @@ use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmployeeImportExportController;
 use App\Http\Controllers\WorkUnitController;
+use App\Http\Controllers\MinutesController;
 
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -71,3 +72,14 @@ Route::patch('/meetings/update-statuses', [MeetingController::class, 'updateStat
 // Attendance
 Route::post('/meeting/{id}/scan', [MeetingController::class, 'scanBarcode']);
 Route::patch('/meeting/{id}/attendance/{participantId}', [MeetingController::class, 'manualAttendance']);
+
+// Meeting Minutes (Notulensi Rapat)
+Route::get('/meeting/{meetingId}/minutes', [MinutesController::class, 'show']);
+Route::post('/meeting/{meetingId}/minutes', [MinutesController::class, 'upsert']);
+
+// Upload gambar untuk Quill editor
+Route::post('/minutes/upload-image', [MinutesController::class, 'uploadImage']);
+
+// Dokumen rapat (undangan, lampiran, dll.)
+Route::post('/meeting/{meetingId}/documents', [MinutesController::class, 'uploadDocument']);
+Route::delete('/meeting/{meetingId}/documents/{documentId}', [MinutesController::class, 'deleteDocument']);

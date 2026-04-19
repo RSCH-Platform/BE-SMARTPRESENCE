@@ -40,4 +40,14 @@ class Meeting extends Model
     {
         return $this->hasMany(Attendance::class);
     }
+
+    public function minutes()
+    {
+        return $this->hasOne(MeetingMinutes::class);
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(MeetingDocument::class);
+    }
 }

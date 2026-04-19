@@ -56,7 +56,7 @@ class EmployeeController extends Controller
                 }
             }
 
-            $perPage = $request->query('per_page', 10);
+            $perPage = $request->query('per_page', 20);
             $result = $query->latest()->paginate($perPage);
 
             return response()->json([

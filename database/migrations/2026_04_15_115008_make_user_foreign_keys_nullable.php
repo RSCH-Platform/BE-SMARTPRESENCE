@@ -49,14 +49,6 @@ return new class extends Migration
             $table->foreign('verified_by')->references('id')->on('users')->nullOnDelete();
         });
 
-        // meeting_documents.uploaded_by → nullable, SET NULL
-        Schema::table('meeting_documents', function (Blueprint $table) {
-            $table->dropForeign(['uploaded_by']);
-        });
-        Schema::table('meeting_documents', function (Blueprint $table) {
-            $table->unsignedBigInteger('uploaded_by')->nullable()->change();
-            $table->foreign('uploaded_by')->references('id')->on('users')->nullOnDelete();
-        });
     }
 
     /**
@@ -91,14 +83,6 @@ return new class extends Migration
         });
         Schema::table('attendances', function (Blueprint $table) {
             $table->foreign('verified_by')->references('id')->on('users');
-        });
-
-        Schema::table('meeting_documents', function (Blueprint $table) {
-            $table->dropForeign(['uploaded_by']);
-        });
-        Schema::table('meeting_documents', function (Blueprint $table) {
-            $table->unsignedBigInteger('uploaded_by')->nullable(false)->change();
-            $table->foreign('uploaded_by')->references('id')->on('users');
         });
     }
 };

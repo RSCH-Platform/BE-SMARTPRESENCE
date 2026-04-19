@@ -237,34 +237,5 @@ class SmartPresenceSeeder extends Seeder
             ]
         ]);
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | MEETING DOCUMENTS
-        |--------------------------------------------------------------------------
-        */
-
-        DB::table('meeting_documents')->insert([
-            [
-                'meeting_id'=>1,
-                'type'=>'minutes',
-                'file_name'=>'notulen_rapat.pdf',
-                'file_path'=>'documents/notulen_rapat.pdf',
-                'file_size'=>120000,
-                'mime_type'=>'application/pdf',
-
-                'director_name'=>'Dr. Agus Setiawan',
-                'director_position'=>'Direktur Rumah Sakit',
-                'director_signed_at'=>Carbon::now(),
-
-                'notulis_name'=>'Admin Rapat',
-                'notulis_position'=>'Staff Administrasi',
-                'notulis_signed_at'=>Carbon::now(),
-
-                'uploaded_by'=>2,
-                'created_at'=>now(),
-                'updated_at'=>now()
-            ]
-        ]);
     }
 }
