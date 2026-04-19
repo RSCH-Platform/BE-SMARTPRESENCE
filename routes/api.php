@@ -13,6 +13,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmployeeImportExportController;
 use App\Http\Controllers\WorkUnitController;
 use App\Http\Controllers\MinutesController;
+use App\Http\Controllers\LaporanController;
 
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -77,9 +78,17 @@ Route::patch('/meeting/{id}/attendance/{participantId}', [MeetingController::cla
 Route::get('/meeting/{meetingId}/minutes', [MinutesController::class, 'show']);
 Route::post('/meeting/{meetingId}/minutes', [MinutesController::class, 'upsert']);
 
-// Upload gambar untuk Quill editor
+// Upload image for Quill editor
 Route::post('/minutes/upload-image', [MinutesController::class, 'uploadImage']);
 
 // Dokumen rapat (undangan, lampiran, dll.)
 Route::post('/meeting/{meetingId}/documents', [MinutesController::class, 'uploadDocument']);
 Route::delete('/meeting/{meetingId}/documents/{documentId}', [MinutesController::class, 'deleteDocument']);
+
+// ─── Laporan Rapat (Dashboard Sekretaris) ────────────────────────────────────
+// Daftar rapat + status kelengkapan lampiran (filter: search, date, status)
+Route::get('/laporan/rapat', [LaporanController::class, 'index']);
+// Detail satu rapat: peserta, kehadiran, notulensi, dokumen
+Route::get('/laporan/rapat/{id}', [LaporanController::class, 'show']);
+// Export data rapat lengkap (untuk FE generate PDF)
+Route::get('/laporan/rapat/{id}/export', [LaporanController::class, 'export']);
