@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Http\Requests\storeUserRequest;
 use App\Http\Requests\updateUserRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Exception;
 
 class UserController extends Controller
@@ -192,7 +193,9 @@ class UserController extends Controller
     public function roles()
     {
         try {
-            $result = Role::all();
+            $result = Cache::rememberForever('roles', function () {
+                return Role::all();
+            });
             return response()->json([
                 'message' => 'Roles fetched successfully',
                 'data' => $result,

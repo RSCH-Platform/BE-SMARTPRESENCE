@@ -7,6 +7,7 @@ use App\Models\MeetingDocument;
 use App\Models\MeetingMinutes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 use Exception;
 
 class MinutesController extends Controller
@@ -75,6 +76,8 @@ class MinutesController extends Controller
                     'updated_by'        => auth()->id() ?? null,
                 ]
             );
+
+            Cache::tags(['meetings'])->flush();
 
             return response()->json([
                 'message' => 'Minutes saved successfully',
@@ -154,6 +157,8 @@ class MinutesController extends Controller
                 'uploaded_by'=> auth()->id() ?? 3,
             ]);
 
+            Cache::tags(['meetings'])->flush();
+
             return response()->json([
                 'message' => 'Document uploaded successfully',
                 'data'    => array_merge($document->toArray(), [
@@ -187,6 +192,8 @@ class MinutesController extends Controller
             Storage::disk('public')->delete($document->file_path);
 
             $document->delete();
+
+            Cache::tags(['meetings'])->flush();
 
             return response()->json(['message' => 'Document deleted successfully'], 200);
         } catch (Exception $e) {

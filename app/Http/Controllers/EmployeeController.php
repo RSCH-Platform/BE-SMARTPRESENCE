@@ -9,6 +9,7 @@ use App\Models\Employee;
 use App\Models\EmployeeType;
 use App\Models\WorkUnit;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 use Exception;
 
 class EmployeeController extends Controller
@@ -25,39 +26,42 @@ class EmployeeController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = Employee::with(['employeeType', 'workUnit']);
+            $cacheKey = 'employees_index_' . md5($request->fullUrl());
+            $result = Cache::tags(['employees'])->remember($cacheKey, 3600, function () use ($request) {
+                $query = Employee::with(['employeeType', 'workUnit']);
 
-            // Search berdasarkan nama atau NIP
-            if ($request->filled('search')) {
-                $search = $request->query('search');
-                $query->where(function ($q) use ($search) {
-                    $q->where('full_name', 'like', "%{$search}%")
-                      ->orWhere('nip', 'like', "%{$search}%");
-                });
-            }
-
-            // Filter berdasarkan jenis tenaga
-            if ($request->filled('employee_type_id')) {
-                $query->where('employee_type_id', $request->query('employee_type_id'));
-            }
-
-            // Filter berdasarkan unit kerja
-            if ($request->filled('work_unit_id')) {
-                $workUnitId = $request->query('work_unit_id');
-                // Jika work_unit_id null atau "none", tampilkan hanya karyawan tanpa unit kerja
-                if ($workUnitId === 'All' || $workUnitId === null) {
-                    $query->whereNull('work_unit_id');
-                } else {
-                    // Jika ada unit kerja spesifik, tampilkan karyawan dari unit itu PLUS yang tidak punya unit kerja
-                    $query->where(function ($q) use ($workUnitId) {
-                        $q->where('work_unit_id', $workUnitId)
-                          ->orWhereNull('work_unit_id');
+                // Search berdasarkan nama atau NIP
+                if ($request->filled('search')) {
+                    $search = $request->query('search');
+                    $query->where(function ($q) use ($search) {
+                        $q->where('full_name', 'like', "%{$search}%")
+                          ->orWhere('nip', 'like', "%{$search}%");
                     });
                 }
-            }
 
-            $perPage = $request->query('per_page', 20);
-            $result = $query->latest()->paginate($perPage);
+                // Filter berdasarkan jenis tenaga
+                if ($request->filled('employee_type_id')) {
+                    $query->where('employee_type_id', $request->query('employee_type_id'));
+                }
+
+                // Filter berdasarkan unit kerja
+                if ($request->filled('work_unit_id')) {
+                    $workUnitId = $request->query('work_unit_id');
+                    // Jika work_unit_id null atau "none", tampilkan hanya karyawan tanpa unit kerja
+                    if ($workUnitId === 'All' || $workUnitId === null) {
+                        $query->whereNull('work_unit_id');
+                    } else {
+                        // Jika ada unit kerja spesifik, tampilkan karyawan dari unit itu PLUS yang tidak punya unit kerja
+                        $query->where(function ($q) use ($workUnitId) {
+                            $q->where('work_unit_id', $workUnitId)
+                              ->orWhereNull('work_unit_id');
+                        });
+                    }
+                }
+
+                $perPage = $request->query('per_page', 50);
+                return $query->latest()->paginate($perPage);
+            });
 
             return response()->json([
                 'message' => 'Employees fetched successfully',
@@ -88,6 +92,8 @@ class EmployeeController extends Controller
             $result = Employee::create($validated);
             $result->load(['employeeType', 'workUnit']);
 
+            Cache::tags(['employees'])->flush();
+
             return response()->json([
                 'message' => 'Employee created successfully',
                 'data' => $result,
@@ -106,7 +112,10 @@ class EmployeeController extends Controller
     public function show(string $id)
     {
         try {
-            $result = Employee::with(['employeeType', 'workUnit'])->find($id);
+            $cacheKey = 'employees_show_' . $id;
+            $result = Cache::tags(['employees'])->remember($cacheKey, 3600, function () use ($id) {
+                return Employee::with(['employeeType', 'workUnit'])->find($id);
+            });
             if (!$result) {
                 return response()->json([
                     'message' => 'Employee not found',
@@ -161,6 +170,8 @@ class EmployeeController extends Controller
             $result->update($validated);
             $result->load(['employeeType', 'workUnit']);
 
+            Cache::tags(['employees'])->flush();
+
             return response()->json([
                 'message' => 'Employee updated successfully',
                 'data' => $result,
@@ -193,6 +204,8 @@ class EmployeeController extends Controller
 
             $result->delete();
 
+            Cache::tags(['employees'])->flush();
+
             return response()->json([
                 'message' => 'Employee deleted successfully',
             ], 200);
@@ -210,7 +223,9 @@ class EmployeeController extends Controller
     public function employeeTypes()
     {
         try {
-            $result = EmployeeType::all();
+            $result = Cache::rememberForever('employee_types', function () {
+                return EmployeeType::all();
+            });
             return response()->json([
                 'message' => 'Employee types fetched successfully',
                 'data' => $result,
@@ -229,17 +244,19 @@ class EmployeeController extends Controller
     public function workUnits()
     {
         try {
-            $result = WorkUnit::all();
-            
-            // Tambahkan opsi "none" untuk karyawan tanpa unit kerja
-            $noneOption = (object)[
-                'id' => null,
-                'work_unit' => 'none',
-                'created_at' => null,
-                'updated_at' => null,
-            ];
-            
-            $result = collect($result)->prepend($noneOption);
+            $result = Cache::rememberForever('work_units', function () {
+                $units = WorkUnit::all();
+                
+                // Tambahkan opsi "none" untuk karyawan tanpa unit kerja
+                $noneOption = (object)[
+                    'id' => null,
+                    'work_unit' => 'none',
+                    'created_at' => null,
+                    'updated_at' => null,
+                ];
+                
+                return collect($units)->prepend($noneOption);
+            });
             
             return response()->json([
                 'message' => 'Work units fetched successfully',

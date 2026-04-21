@@ -29,23 +29,31 @@ class DashboardController extends Controller
 
             // statistik - Always use today
             $totalEmployees = Employee::where('is_active', true)->count();
-            $meetingsToday = Meeting::whereDate('start_time', $todayDate)->count();
-            $meetingsPending = Meeting::whereDate('start_time', $todayDate)
-                ->where('status', 'menunggu')
-                ->count();
-            $meetingsCompleted = Meeting::whereDate('start_time', $todayDate)
-                ->where('status', 'selesai')
-                ->count();
+            $meetingsStats = Meeting::whereDate('start_time', $todayDate)
+                ->selectRaw('count(*) as total')
+                ->selectRaw("count(case when status = 'menunggu' then 1 end) as pending")
+                ->selectRaw("count(case when status = 'selesai' then 1 end) as completed")
+                ->first();
+
+            $meetingsToday = $meetingsStats->total ?? 0;
+            $meetingsPending = $meetingsStats->pending ?? 0;
+            $meetingsCompleted = $meetingsStats->completed ?? 0;
 
             // Rapat hari ini dengan detail - Always use today
             $todaysMeetings = Meeting::whereDate('start_time', $todayDate)
-                ->with(['room:id,name,location', 'creator:id,username', 'participants', 'attendances'])
+                ->with(['room:id,name,location', 'creator:id,username'])
+                ->withCount([
+                    'participants',
+                    'attendances as attendance_present' => function ($query) {
+                        $query->where('status', 'hadir');
+                    }
+                ])
                 ->orderBy('start_time', 'asc')
                 ->get()
                 ->map(function ($meeting) {
-                    $participantsCount = $meeting->participants->count();
-                    $attendancePresent = $meeting->attendances->where('status', 'hadir')->count();
-                    $attendanceAbsent = $participantsCount - $attendancePresent;
+                    $participantsCount = $meeting->participants_count;
+                    $attendancePresent = $meeting->attendance_present;
+                    $attendanceAbsent = max(0, $participantsCount - $attendancePresent);
 
                     return [
                         'id' => $meeting->id,
@@ -117,24 +125,23 @@ class DashboardController extends Controller
     {
         $now = Carbon::now();
 
-        $meetings = Meeting::whereDate('start_time', $date)
+        Meeting::whereDate('start_time', $date)
             ->where('status', '!=', 'dibatalkan')
-            ->get();
+            ->where('status', '!=', 'selesai')
+            ->where('end_time', '<', $now)
+            ->update(['status' => 'selesai']);
 
-        foreach ($meetings as $meeting) {
-            $newStatus = $meeting->status;
+        Meeting::whereDate('start_time', $date)
+            ->where('status', '!=', 'dibatalkan')
+            ->where('status', '!=', 'berlangsung')
+            ->where('start_time', '<=', $now)
+            ->where('end_time', '>=', $now)
+            ->update(['status' => 'berlangsung']);
 
-            if ($now->greaterThan($meeting->end_time)) {
-                $newStatus = 'selesai';
-            } elseif ($now->greaterThanOrEqualTo($meeting->start_time) && $now->lessThanOrEqualTo($meeting->end_time)) {
-                $newStatus = 'berlangsung';
-            } else {
-                $newStatus = 'menunggu';
-            }
-
-            if ($newStatus !== $meeting->status) {
-                $meeting->update(['status' => $newStatus]);
-            }
-        }
+        Meeting::whereDate('start_time', $date)
+            ->where('status', '!=', 'dibatalkan')
+            ->where('status', '!=', 'menunggu')
+            ->where('start_time', '>', $now)
+            ->update(['status' => 'menunggu']);
     }
 }
