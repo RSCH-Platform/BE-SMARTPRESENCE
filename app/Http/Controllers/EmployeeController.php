@@ -28,7 +28,11 @@ class EmployeeController extends Controller
         try {
             $cacheKey = 'employees_index_' . md5($request->fullUrl());
             $result = Cache::tags(['employees'])->remember($cacheKey, 3600, function () use ($request) {
-                $query = Employee::with(['employeeType', 'workUnit']);
+                $query = Employee::select('id', 'full_name', 'nip', 'employee_type_id', 'work_unit_id', 'deleted_at', 'phone', 'email')
+                    ->with([
+                        'employeeType:id,employee_type',
+                        'workUnit:id,work_unit'
+                    ]);
 
                 // Search berdasarkan nama atau NIP
                 if ($request->filled('search')) {
@@ -59,7 +63,7 @@ class EmployeeController extends Controller
                     }
                 }
 
-                $perPage = $request->query('per_page', 50);
+                $perPage = (int) $request->query('per_page', 10);
                 return $query->latest()->paginate($perPage);
             });
 
@@ -224,7 +228,7 @@ class EmployeeController extends Controller
     {
         try {
             $result = Cache::rememberForever('employee_types', function () {
-                return EmployeeType::all();
+                return EmployeeType::select('id', 'employee_type')->get();
             });
             return response()->json([
                 'message' => 'Employee types fetched successfully',
@@ -245,14 +249,12 @@ class EmployeeController extends Controller
     {
         try {
             $result = Cache::rememberForever('work_units', function () {
-                $units = WorkUnit::all();
+                $units = WorkUnit::select('id', 'work_unit')->get();
                 
                 // Tambahkan opsi "none" untuk karyawan tanpa unit kerja
                 $noneOption = (object)[
                     'id' => null,
                     'work_unit' => 'none',
-                    'created_at' => null,
-                    'updated_at' => null,
                 ];
                 
                 return collect($units)->prepend($noneOption);

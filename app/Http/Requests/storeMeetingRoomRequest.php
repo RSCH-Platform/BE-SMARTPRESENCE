@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StoreMeetingRoomRequest extends FormRequest
 {
@@ -27,5 +29,13 @@ class StoreMeetingRoomRequest extends FormRequest
             'capacity' => 'required|integer|min:1',
             'is_active' => 'sometimes|boolean',
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Validation failed',
+            'errors' => $validator->errors(),
+        ], 422));
     }
 }

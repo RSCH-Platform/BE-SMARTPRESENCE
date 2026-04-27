@@ -6,6 +6,7 @@ use App\Models\MeetingRoom;
 use App\Http\Requests\StoreMeetingRoomRequest;
 use App\Http\Requests\UpdateMeetingRoomRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Exception;
 
 class MeetingsRoomController extends Controller
@@ -20,19 +21,22 @@ class MeetingsRoomController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = MeetingRoom::query();
+            $cacheKey = 'meeting_rooms_index_' . md5($request->fullUrl());
+            $result = Cache::tags(['meeting_rooms'])->remember($cacheKey, 3600, function () use ($request) {
+                $query = MeetingRoom::select('id', 'name', 'location', 'capacity', 'is_active');
 
-            // Search berdasarkan nama atau lokasi
-            if ($request->filled('search')) {
-                $search = $request->query('search');
-                $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                      ->orWhere('location', 'like', "%{$search}%");
-                });
-            }
+                // Search berdasarkan nama atau lokasi
+                if ($request->filled('search')) {
+                    $search = $request->query('search');
+                    $query->where(function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%")
+                          ->orWhere('location', 'like', "%{$search}%");
+                    });
+                }
 
-            $perPage = $request->query('per_page', 10);
-            $result = $query->latest()->paginate($perPage);
+                $perPage = (int) $request->query('per_page', 10);
+                return $query->latest()->paginate($perPage);
+            });
 
             return response()->json([
                 'message' => 'Meeting rooms fetched successfully',
@@ -54,6 +58,9 @@ class MeetingsRoomController extends Controller
         try {
             $validated = $request->validated();
             $result = MeetingRoom::create($validated);
+            
+            Cache::tags(['meeting_rooms'])->flush();
+            Cache::forget('meeting_rooms_all');
 
             return response()->json([
                 'message' => 'Meeting room created successfully',
@@ -108,6 +115,9 @@ class MeetingsRoomController extends Controller
             $validated = $request->validated();
             $result->update($validated);
 
+            Cache::tags(['meeting_rooms'])->flush();
+            Cache::forget('meeting_rooms_all');
+
             return response()->json([
                 'message' => 'Meeting room updated successfully',
                 'data' => $result,
@@ -135,6 +145,9 @@ class MeetingsRoomController extends Controller
 
             $result->update(['is_active' => !$result->is_active]);
 
+            Cache::tags(['meeting_rooms'])->flush();
+            Cache::forget('meeting_rooms_all');
+
             return response()->json([
                 'message' => 'Meeting room status updated successfully',
                 'data' => $result,
@@ -153,14 +166,23 @@ class MeetingsRoomController extends Controller
     public function destroy(string $id)
     {
         try {
-            $result = MeetingRoom::find($id);
+            $result = MeetingRoom::withCount('meetings')->find($id);
             if (!$result) {
                 return response()->json([
                     'message' => 'Meeting room not found',
                 ], 404);
             }
 
+            if ($result->meetings_count > 0) {
+                return response()->json([
+                    'message' => 'Ruangan tidak dapat dihapus karena masih digunakan dalam ' . $result->meetings_count . ' rapat',
+                ], 422);
+            }
+
             $result->delete();
+
+            Cache::tags(['meeting_rooms'])->flush();
+            Cache::forget('meeting_rooms_all');
 
             return response()->json([
                 'message' => 'Meeting room deleted successfully',

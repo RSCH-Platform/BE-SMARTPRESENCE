@@ -106,13 +106,17 @@ class MeetingController extends Controller
             // Collect participant employee IDs
             $employeeIds = $this->resolveParticipantIds($validated);
 
-            // Create participants
-            foreach ($employeeIds as $employeeId) {
-                MeetingParticipant::create([
+            // Create participants in bulk
+            $participants = array_map(function ($employeeId) use ($meeting) {
+                return [
                     'meeting_id'  => $meeting->id,
                     'employee_id' => $employeeId,
-                ]);
-            }
+                    'created_at'  => now(),
+                    'updated_at'  => now(),
+                ];
+            }, $employeeIds);
+
+            MeetingParticipant::insert($participants);
 
             $meeting->load(['room', 'participants.employee.workUnit']);
             $meeting->participant_count = $meeting->participants->count();
@@ -143,9 +147,10 @@ class MeetingController extends Controller
             $cacheKey = 'meetings_show_' . $id . '_' . md5($request->fullUrl());
             $responseData = Cache::tags(['meetings'])->remember($cacheKey, 3600, function () use ($id, $request) {
                 $meeting = Meeting::with([
-                    'room',
-                    'participants.employee.workUnit',
-                    'attendances.employee',
+                    'room:id,name,location',
+                    'participants.employee:id,full_name,nip,work_unit_id',
+                    'participants.employee.workUnit:id,work_unit',
+                    'attendances:id,meeting_id,employee_id,check_in_time,status',
                 ])->find($id);
 
                 if (!$meeting) {
@@ -178,7 +183,7 @@ class MeetingController extends Controller
                 if ($request->filled('search')) {
                     $search = strtolower($request->query('search'));
                     $participantsWithAttendance = $participantsWithAttendance->filter(function ($item) use ($search) {
-                        $name = $item['employee']->name ?? '';
+                        $name = $item['employee']->full_name ?? '';
                         return str_contains(strtolower($name), $search);
                     });
                 }
@@ -243,16 +248,20 @@ class MeetingController extends Controller
             if ($hasParticipantChanges && $meeting->status !== 'berlangsung') {
                 $employeeIds = $this->resolveParticipantIds($validated);
 
-                // Remove old participants (only those not yet attended)
+                // Remove old participants
                 $meeting->participants()->delete();
 
-                // Re-create participants
-                foreach ($employeeIds as $employeeId) {
-                    MeetingParticipant::create([
+                // Re-create participants in bulk
+                $participants = array_map(function ($employeeId) use ($meeting) {
+                    return [
                         'meeting_id'  => $meeting->id,
                         'employee_id' => $employeeId,
-                    ]);
-                }
+                        'created_at'  => now(),
+                        'updated_at'  => now(),
+                    ];
+                }, $employeeIds);
+
+                MeetingParticipant::insert($participants);
             }
 
             $meeting->load(['room', 'participants.employee.workUnit']);
@@ -546,6 +555,12 @@ class MeetingController extends Controller
             return;
         }
 
+        // Use a simple cache lock for batch updates
+        $lockKey = 'auto_update_batch_statuses_' . floor(time() / 60);
+        if (Cache::has($lockKey)) {
+            return;
+        }
+
         // Batch update
         $updated1 = Meeting::where('status', '!=', 'dibatalkan')
             ->where('status', '!=', 'selesai')
@@ -566,5 +581,7 @@ class MeetingController extends Controller
         if ($updated1 + $updated2 + $updated3 > 0) {
             Cache::tags(['meetings'])->flush();
         }
+
+        Cache::put($lockKey, true, 60);
     }
 }

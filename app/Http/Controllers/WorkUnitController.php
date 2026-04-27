@@ -6,6 +6,7 @@ use App\Models\WorkUnit;
 use App\Http\Requests\StoreWorkUnitRequest;
 use App\Http\Requests\UpdateWorkUnitRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Exception;
 
 class WorkUnitController extends Controller
@@ -20,16 +21,20 @@ class WorkUnitController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = WorkUnit::withCount('employees');
+            $cacheKey = 'work_units_index_' . md5($request->fullUrl());
+            $result = Cache::tags(['work_units'])->remember($cacheKey, 3600, function () use ($request) {
+                $query = WorkUnit::select('id', 'work_unit', 'created_at')
+                    ->withCount('employees');
 
-            // Search berdasarkan nama unit kerja
-            if ($request->filled('search')) {
-                $search = $request->query('search');
-                $query->where('work_unit', 'like', "%{$search}%");
-            }
+                // Search berdasarkan nama unit kerja
+                if ($request->filled('search')) {
+                    $search = $request->query('search');
+                    $query->where('work_unit', 'like', "%{$search}%");
+                }
 
-            $perPage = $request->query('per_page', 10);
-            $result = $query->latest()->paginate($perPage);
+                $perPage = (int) $request->query('per_page', 10);
+                return $query->latest()->paginate($perPage);
+            });
 
             return response()->json([
                 'message' => 'Work units fetched successfully',
@@ -52,6 +57,9 @@ class WorkUnitController extends Controller
             $validated = $request->validated();
             $result = WorkUnit::create($validated);
             $result->loadCount('employees');
+
+            Cache::tags(['work_units'])->flush();
+            Cache::forget('work_units'); // Also clear the simple key used for dropdowns
 
             return response()->json([
                 'message' => 'Work unit created successfully',
@@ -107,6 +115,9 @@ class WorkUnitController extends Controller
             $result->update($validated);
             $result->loadCount('employees');
 
+            Cache::tags(['work_units'])->flush();
+            Cache::forget('work_units');
+
             return response()->json([
                 'message' => 'Work unit updated successfully',
                 'data' => $result,
@@ -139,6 +150,8 @@ class WorkUnitController extends Controller
             }
 
             $result->delete();
+            Cache::tags(['work_units'])->flush();
+            Cache::forget('work_units');
 
             return response()->json([
                 'message' => 'Work unit deleted successfully',

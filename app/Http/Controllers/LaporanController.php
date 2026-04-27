@@ -130,20 +130,26 @@ class LaporanController extends Controller
         try {
             $cacheKey = 'laporan_show_' . $id;
             $responseData = Cache::tags(['meetings'])->remember($cacheKey, 3600, function () use ($id) {
-                $meeting = Meeting::with([
-                    'room',
-                    'participants.employee.workUnit',
-                    'attendances',
-                    'minutes',
-                    'documents',
-                ])->find($id);
+                $meeting = Meeting::select('id', 'title', 'organizer', 'start_time', 'end_time', 'status', 'room_id')
+                    ->with([
+                        'room:id,name,location',
+                        'minutes',
+                        'documents',
+                    ])
+                    ->withCount([
+                        'participants',
+                        'attendances as hadir_count' => function ($q) {
+                            $q->where('status', 'hadir');
+                        }
+                    ])
+                    ->find($id);
 
                 if (!$meeting) return null;
 
                 // Summary kehadiran
-                $totalPeserta  = $meeting->participants->count();
-                $hadirCount    = $meeting->attendances->where('status', 'hadir')->count();
-                $tidakHadir    = $totalPeserta - $hadirCount;
+                $totalPeserta  = $meeting->participants_count;
+                $hadirCount    = $meeting->hadir_count;
+                $tidakHadir    = max(0, $totalPeserta - $hadirCount);
 
                 // Dokumen + URL publik
                 $documents = $meeting->documents->map(function ($doc) {
@@ -166,7 +172,7 @@ class LaporanController extends Controller
                     'attendance_summary' => [
                         'total'       => $totalPeserta,
                         'hadir'       => $hadirCount,
-                        'tidak_hadir' => max(0, $tidakHadir),
+                        'tidak_hadir' => $tidakHadir,
                     ],
                     'notulensi'          => $meeting->minutes,
                     'documents'          => $documents,
@@ -212,12 +218,20 @@ class LaporanController extends Controller
             $cacheKey = 'laporan_export_' . $id;
             $exportData = Cache::tags(['meetings'])->remember($cacheKey, 3600, function () use ($id) {
                 $meeting = Meeting::with([
-                    'room',
-                    'participants.employee.workUnit',
-                    'attendances.employee',
+                    'room:id,name,location',
+                    'participants.employee:id,full_name,nip,work_unit_id',
+                    'participants.employee.workUnit:id,work_unit',
+                    'attendances:id,meeting_id,employee_id,check_in_time,status',
                     'minutes',
                     'documents',
-                ])->find($id);
+                ])
+                ->withCount([
+                    'participants',
+                    'attendances as hadir_count' => function($q) {
+                        $q->where('status', 'hadir');
+                    }
+                ])
+                ->find($id);
 
                 if (!$meeting) return null;
 
@@ -261,9 +275,9 @@ class LaporanController extends Controller
                         'status'     => $meeting->status,
                     ],
                     'ringkasan_kehadiran' => [
-                        'total'       => $meeting->participants->count(),
-                        'hadir'       => $meeting->attendances->where('status', 'hadir')->count(),
-                        'tidak_hadir' => max(0, $meeting->participants->count() - $meeting->attendances->where('status', 'hadir')->count()),
+                        'total'       => $meeting->participants_count,
+                        'hadir'       => $meeting->hadir_count,
+                        'tidak_hadir' => max(0, $meeting->participants_count - $meeting->hadir_count),
                     ],
                     'peserta'     => $peserta,
                     'notulensi'   => $meeting->minutes ? [
@@ -302,6 +316,12 @@ class LaporanController extends Controller
      */
     private function autoUpdateStatuses(): void
     {
+        // Simple cache lock for batch updates (once per minute)
+        $lockKey = 'auto_update_all_statuses_' . floor(time() / 60);
+        if (Cache::has($lockKey)) {
+            return;
+        }
+
         $now = Carbon::now();
 
         // Update ke selesai
@@ -326,5 +346,7 @@ class LaporanController extends Controller
         if ($updated1 + $updated2 + $updated3 > 0) {
             Cache::tags(['meetings'])->flush();
         }
+
+        Cache::put($lockKey, true, 60);
     }
 }
