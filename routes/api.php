@@ -13,6 +13,7 @@ use App\Http\Controllers\EmployeeImportExportController;
 use App\Http\Controllers\WorkUnitController;
 use App\Http\Controllers\MinutesController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\BackupController;
 
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -92,4 +93,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/laporan/rapat/{id}', [LaporanController::class, 'show']);
     // Export data rapat lengkap (untuk FE generate PDF)
     Route::get('/laporan/rapat/{id}/export', [LaporanController::class, 'export']);
+
+    // ─── Backup / Cadangan (SuperAdmin only – checked in controller) ─────────
+    Route::get('/backups', [BackupController::class, 'index']);
+    Route::get('/backups/stats', [BackupController::class, 'stats']);
+    Route::post('/backup', [BackupController::class, 'store']);
+    Route::get('/backup/{id}/download', [BackupController::class, 'download']);
+    Route::post('/backup/{id}/cancel', [BackupController::class, 'cancel']);
+    Route::delete('/backup/{id}', [BackupController::class, 'destroy']);
 });
