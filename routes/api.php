@@ -16,6 +16,7 @@ use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\BackupController;
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/system-settings/logos', [\App\Http\Controllers\SystemSettingController::class, 'getLogos']);
 
 Route::middleware('auth:sanctum')->group(function () {
     // Route for dashboard
@@ -101,4 +102,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/backup/{id}/download', [BackupController::class, 'download']);
     Route::post('/backup/{id}/cancel', [BackupController::class, 'cancel']);
     Route::delete('/backup/{id}', [BackupController::class, 'destroy']);
+
+    // Ubah Logo (Super Admin)
+    Route::post('/logo/upload', [\App\Http\Controllers\SystemSettingController::class, 'uploadLogo']);
 });
