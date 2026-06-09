@@ -51,7 +51,7 @@ class SmartPresenceSeeder extends Seeder
                 'updated_at'=>now()
             ],
             [
-                'username'=>'sekretaris',
+                'username'=>'Sekretaris',
                 'email'=>'sekretaris@mail.com',
                 'password'=>'password',
                 'role_id'=>3,
@@ -85,7 +85,7 @@ class SmartPresenceSeeder extends Seeder
             ['id'=>15,'employee_type'=>'Refraksionis Optisien'],
             ['id'=>16,'employee_type'=>'Fisioterapis'],
             ['id'=>17,'employee_type'=>'Psikolog'],
-            ['id'=>18,'employee_type'=>'Non-Kesehatan / Direksi'],
+            ['id'=>18,'employee_type'=>'Direksi'],
             ['id'=>19,'employee_type'=>'Non-Kesehatan'],
             ['id'=>20,'employee_type'=>'TTK']
 
