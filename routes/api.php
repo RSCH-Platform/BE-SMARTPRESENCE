@@ -11,6 +11,7 @@ use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmployeeImportExportController;
 use App\Http\Controllers\WorkUnitController;
+use App\Http\Controllers\EmployeeTypeController;
 use App\Http\Controllers\MinutesController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\BackupController;
@@ -61,6 +62,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/work-unit', [WorkUnitController::class, 'store']);
     Route::patch('/work-unit/{id}', [WorkUnitController::class, 'update']);
     Route::delete('/work-unit/{id}', [WorkUnitController::class, 'destroy']);
+
+    // Route for employee types (jabatan)
+    Route::get('/employee-types-manage', [EmployeeTypeController::class, 'index']);
+    Route::get('/employee-type/{id}', [EmployeeTypeController::class, 'show']);
+    Route::post('/employee-type', [EmployeeTypeController::class, 'store']);
+    Route::patch('/employee-type/{id}', [EmployeeTypeController::class, 'update']);
+    Route::delete('/employee-type/{id}', [EmployeeTypeController::class, 'destroy']);
 
     // Route for meetings
     Route::get('/meetings', [MeetingController::class, 'index']);
