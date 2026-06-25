@@ -58,7 +58,947 @@ class SmartPresenceSeeder extends Seeder
                 'is_active'=>true,
                 'created_at'=>now(),
                 'updated_at'=>now()
-            ]
+            ],
+
+    // SPI
+    [
+        'username'=>'admin_spi',
+        'email'=>'',
+        'password'=>'BintangSPI27',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_spi',
+        'email'=>'',
+        'password'=>'PelangiSPI82',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Direksi
+    [
+        'username'=>'admin_direksi',
+        'email'=>'',
+        'password'=>'MentariDireksi14',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_direksi',
+        'email'=>'',
+        'password'=>'SamudraDireksi69',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Pemasaran
+    [
+        'username'=>'admin_pemasaran',
+        'email'=>'',
+        'password'=>'RajawaliPemasaran31',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_pemasaran',
+        'email'=>'',
+        'password'=>'MawarPemasaran88',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // IGD
+    [
+        'username'=>'admin_igd',
+        'email'=>'',
+        'password'=>'KompasIGD25',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_igd',
+        'email'=>'',
+        'password'=>'LenteraIGD73',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Pelayanan Medis
+    [
+        'username'=>'admin_pelayananmedis',
+        'email'=>'',
+        'password'=>'AnggrekMedis42',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_pelayananmedis',
+        'email'=>'',
+        'password'=>'CakrawalaMedis91',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Casemix
+    [
+        'username'=>'admin_casemix',
+        'email'=>'',
+        'password'=>'DelimaCasemix36',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_casemix',
+        'email'=>'',
+        'password'=>'KenangaCasemix57',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Rawat Jalan
+    [
+        'username'=>'admin_rawatjalan',
+        'email'=>'',
+        'password'=>'MerpatiRawat18',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_rawatjalan',
+        'email'=>'',
+        'password'=>'NusantaraRawat84',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // K3
+    [
+        'username'=>'admin_k3',
+        'email'=>'',
+        'password'=>'GarudaK358',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_k3',
+        'email'=>'',
+        'password'=>'SenjaK312',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Penunjang Medis
+    [
+        'username'=>'admin_penunjangmedis',
+        'email'=>'',
+        'password'=>'BerlianPenunjang44',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_penunjangmedis',
+        'email'=>'',
+        'password'=>'EmbunPenunjang76',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Keperawatan
+    [
+        'username'=>'admin_keperawatan',
+        'email'=>'',
+        'password'=>'HarapanPerawat23',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_keperawatan',
+        'email'=>'',
+        'password'=>'BahariPerawat67',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // PKRS
+    [
+        'username'=>'admin_pkrs',
+        'email'=>'',
+        'password'=>'MahkotaPKRS39',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_pkrs',
+        'email'=>'',
+        'password'=>'MelatiPKRS83',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // PPI
+    [
+        'username'=>'admin_ppi',
+        'email'=>'',
+        'password'=>'PelitaPPI41',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_ppi',
+        'email'=>'',
+        'password'=>'KencanaPPI79',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // HD
+    [
+        'username'=>'admin_hd',
+        'email'=>'',
+        'password'=>'SakuraHD11',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_hd',
+        'email'=>'',
+        'password'=>'LaksanaHD63',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Teratai
+    [
+        'username'=>'admin_teratai',
+        'email'=>'',
+        'password'=>'TerataiEmas24',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_teratai',
+        'email'=>'',
+        'password'=>'TerataiBiru85',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Anturium
+    [
+        'username'=>'admin_anturium',
+        'email'=>'',
+        'password'=>'AnturiumHijau47',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_anturium',
+        'email'=>'',
+        'password'=>'AnturiumUngu92',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Rosalina
+    [
+        'username'=>'admin_rosalina',
+        'email'=>'',
+        'password'=>'RosalinaMerah53',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_rosalina',
+        'email'=>'',
+        'password'=>'RosalinaPutih16',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // ICU
+    [
+        'username'=>'admin_icu',
+        'email'=>'',
+        'password'=>'JagatICU72',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_icu',
+        'email'=>'',
+        'password'=>'LangitICU29',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Alamanda
+    [
+        'username'=>'admin_alamanda',
+        'email'=>'',
+        'password'=>'AlamandaKuning61',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_alamanda',
+        'email'=>'',
+        'password'=>'AlamandaJingga34',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Perinatologi
+    [
+        'username'=>'admin_perinatologi',
+        'email'=>'',
+        'password'=>'KasihPerina48',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_perinatologi',
+        'email'=>'',
+        'password'=>'BundaPerina95',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // OK
+    [
+        'username'=>'admin_ok',
+        'email'=>'',
+        'password'=>'PusakaOK13',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_ok',
+        'email'=>'',
+        'password'=>'MustikaOK81',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Mutu
+    [
+        'username'=>'admin_mutu',
+        'email'=>'',
+        'password'=>'MutiaraMutu26',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_mutu',
+        'email'=>'',
+        'password'=>'PratamaMutu74',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Lotus
+    [
+        'username'=>'admin_lotus',
+        'email'=>'',
+        'password'=>'LotusPerak38',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_lotus',
+        'email'=>'',
+        'password'=>'LotusKristal65',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Tulip
+    [
+        'username'=>'admin_tulip',
+        'email'=>'',
+        'password'=>'TulipCerah43',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_tulip',
+        'email'=>'',
+        'password'=>'TulipDamai87',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Farmasi
+    [
+        'username'=>'admin_farmasi',
+        'email'=>'',
+        'password'=>'FarmasiSehat21',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_farmasi',
+        'email'=>'',
+        'password'=>'FarmasiPrima68',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // VK
+    [
+        'username'=>'admin_vk',
+        'email'=>'',
+        'password'=>'BahagiaVK54',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_vk',
+        'email'=>'',
+        'password'=>'SentosaVK19',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Laboratorium
+    [
+        'username'=>'admin_laboratorium',
+        'email'=>'',
+        'password'=>'LabCemerlang46',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_laboratorium',
+        'email'=>'',
+        'password'=>'LabGemilang77',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Rekam Medis
+    [
+        'username'=>'admin_rekammedis',
+        'email'=>'',
+        'password'=>'ArsipMedis28',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_rekammedis',
+        'email'=>'',
+        'password'=>'DataMedis86',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Radiologi
+    [
+        'username'=>'admin_radiologi',
+        'email'=>'',
+        'password'=>'SinarRadiologi35',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_radiologi',
+        'email'=>'',
+        'password'=>'GammaRadiologi71',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Gizi
+    [
+        'username'=>'admin_gizi',
+        'email'=>'',
+        'password'=>'NutrisiGizi22',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_gizi',
+        'email'=>'',
+        'password'=>'VitaminGizi64',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Umum RT
+    [
+        'username'=>'admin_umumrt',
+        'email'=>'',
+        'password'=>'MandiriRT17',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_umumrt',
+        'email'=>'',
+        'password'=>'SejahteraRT93',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Kepegawaian
+    [
+        'username'=>'admin_umumkepegawaian',
+        'email'=>'',
+        'password'=>'PegawaiHebat51',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_umumkepegawaian',
+        'email'=>'',
+        'password'=>'PegawaiUnggul78',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // TPP
+    [
+        'username'=>'admin_tpp',
+        'email'=>'',
+        'password'=>'HarmoniTPP32',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_tpp',
+        'email'=>'',
+        'password'=>'PrestasiTPP89',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // IPP
+    [
+        'username'=>'admin_ipp',
+        'email'=>'',
+        'password'=>'PelangganSetia27',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_ipp',
+        'email'=>'',
+        'password'=>'LayananPrima84',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Keuangan
+    [
+        'username'=>'admin_keuangan',
+        'email'=>'',
+        'password'=>'SaldoKeuangan56',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_keuangan',
+        'email'=>'',
+        'password'=>'NeracaKeuangan15',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Akuntansi
+    [
+        'username'=>'admin_akuntansi',
+        'email'=>'',
+        'password'=>'JurnalAkuntansi62',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_akuntansi',
+        'email'=>'',
+        'password'=>'LedgerAkuntansi37',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Perpajakan
+    [
+        'username'=>'admin_perpajakan',
+        'email'=>'',
+        'password'=>'PajakTertib49',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_perpajakan',
+        'email'=>'',
+        'password'=>'PajakAman94',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Sekretariat
+    [
+        'username'=>'admin_sekretariat',
+        'email'=>'',
+        'password'=>'SekretariatMaju33',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_sekretariat',
+        'email'=>'',
+        'password'=>'SekretariatHebat82',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Kasir
+    [
+        'username'=>'admin_kasir',
+        'email'=>'',
+        'password'=>'KasirCerdas52',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_kasir',
+        'email'=>'',
+        'password'=>'KasirCepat18',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Transportasi
+    [
+        'username'=>'admin_transportasi',
+        'email'=>'',
+        'password'=>'TransportLancar45',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_transportasi',
+        'email'=>'',
+        'password'=>'TransportAman97',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Kebersihan
+    [
+        'username'=>'admin_kebersihan',
+        'email'=>'',
+        'password'=>'BersihKinclong24',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_kebersihan',
+        'email'=>'',
+        'password'=>'RapiWangi73',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // CSSD
+    [
+        'username'=>'admin_cssd',
+        'email'=>'',
+        'password'=>'SterilCSSD58',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_cssd',
+        'email'=>'',
+        'password'=>'HigienisCSSD14',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Akupunktur
+    [
+        'username'=>'admin_akunpuktur',
+        'email'=>'',
+        'password'=>'JarumSehat66',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_akunpuktur',
+        'email'=>'',
+        'password'=>'TerapiNyaman31',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Diklat
+    [
+        'username'=>'admin_kepegawaiandiklat',
+        'email'=>'',
+        'password'=>'DiklatUnggul42',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_kepegawaiandiklat',
+        'email'=>'',
+        'password'=>'BelajarMaju88',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // TIK
+    [
+        'username'=>'admin_tik',
+        'email'=>'',
+        'password'=>'DigitalTIK57',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_tik',
+        'email'=>'',
+        'password'=>'TeknologiTIK23',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // TI
+    [
+        'username'=>'admin_ti',
+        'email'=>'',
+        'password'=>'ServerTI69',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_ti',
+        'email'=>'',
+        'password'=>'JaringanTI12',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Laundry
+    [
+        'username'=>'admin_laundry',
+        'email'=>'',
+        'password'=>'LaundryBersih47',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_laundry',
+        'email'=>'',
+        'password'=>'LaundryHarum91',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+
+    // Keamanan
+    [
+        'username'=>'admin_keamanan',
+        'email'=>'',
+        'password'=>'KeamananSiaga36',
+        'role_id'=>2,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
+    [
+        'username'=>'sekre_keamanan',
+        'email'=>'',
+        'password'=>'PenjagaAman75',
+        'role_id'=>3,
+        'is_active'=>true,
+        'created_at'=>now(),
+        'updated_at'=>now()
+    ],
         ]);
 
 
@@ -87,7 +1027,10 @@ class SmartPresenceSeeder extends Seeder
             ['id'=>17,'employee_type'=>'Psikolog'],
             ['id'=>18,'employee_type'=>'Direksi'],
             ['id'=>19,'employee_type'=>'Non-Kesehatan'],
-            ['id'=>20,'employee_type'=>'TTK']
+            ['id'=>20,'employee_type'=>'TTK'],
+            ['id'=>21,'employee_type'=>'Konsultan'],
+            ['id'=>22,'employee_type'=>'Tamu'],
+           
 
         ]);
 

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('username',100);
-            $table->string('email',150)->unique()->nullable();
+            $table->string('email',150)->nullable();
             $table->string('password');
             $table->foreignId('role_id')->constrained('roles');
             $table->boolean('is_active')->default(true);
