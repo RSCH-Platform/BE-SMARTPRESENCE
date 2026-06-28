@@ -22,8 +22,17 @@ class StoreAuthRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nip' => 'required',
-            'password' => 'required'
+            /**
+             * NIP (Nomor Induk Pegawai)
+             * @example 198001012005011001
+             */
+            'nip' => 'required|string',
+            
+            /**
+             * Password pengguna
+             * @example password123
+             */
+            'password' => 'required|string'
         ];
     }
 }

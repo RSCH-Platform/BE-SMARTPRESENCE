@@ -15,6 +15,8 @@ class DashboardController extends Controller
     /**
      * Get dashboard data including summary statistics,
      * today's meetings, and room usage timeline.
+     * 
+     * @tags Dashboard
      */
     public function index(Request $request)
     {

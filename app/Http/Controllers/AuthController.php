@@ -17,6 +17,18 @@ class AuthController extends Controller
      * Autentikasi pengguna menggunakan NIP dan password untuk mendapatkan Bearer Token.
      * 
      * @unauthenticated
+     * @tags Authentication
+     * @response 200 {
+     *    "message": "Login berhasil",
+     *    "token": "1|token-string",
+     *    "user": {}
+     * }
+     * @response 401 {
+     *    "message": "NIP atau password salah"
+     * }
+     * @response 403 {
+     *    "message": "User tidak aktif"
+     * }
      */
     public function login(StoreAuthRequest $request)
     {
@@ -28,7 +40,7 @@ class AuthController extends Controller
             ], 401);
         }
 
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         if ($user->status !== 'active') {
@@ -38,6 +50,8 @@ class AuthController extends Controller
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
+
+        $user->load('roles');
 
         return response()->json([
             'message' => 'Login berhasil',
