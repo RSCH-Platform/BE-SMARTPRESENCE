@@ -33,16 +33,16 @@ class SmartPresenceSeeder extends Seeder
         */
 
         $usersData = [
-            ['name' => 'Super Admin', 'nip' => '10001', 'email' => 'super@mail.com', 'password' => Hash::make('password'), 'roles' => [1], 'status' => 'active'],
-            ['name' => 'Admin Utama', 'nip' => '10002', 'email' => 'admin@mail.com', 'password' => Hash::make('password'), 'roles' => [2], 'status' => 'active'],
-            ['name' => 'Sekretaris', 'nip' => '10003', 'email' => 'sekretaris@mail.com', 'password' => Hash::make('password'), 'roles' => [3], 'status' => 'active'],
-            ['name' => 'Budi Santoso', 'nip' => '10004', 'email' => 'budi@mail.com', 'password' => Hash::make('password'), 'roles' => [2], 'status' => 'active'],
-            ['name' => 'Andi Setiawan', 'nip' => '10005', 'email' => 'andi@mail.com', 'password' => Hash::make('password'), 'roles' => [2], 'status' => 'active'],
-            ['name' => 'Citra Dewi', 'nip' => '10006', 'email' => 'citra@mail.com', 'password' => Hash::make('password'), 'roles' => [3], 'status' => 'active'],
-            ['name' => 'Dian Pertiwi', 'nip' => '10007', 'email' => 'dian@mail.com', 'password' => Hash::make('password'), 'roles' => [3], 'status' => 'active'],
-            ['name' => 'Eko Prasetyo', 'nip' => '10008', 'email' => 'eko@mail.com', 'password' => Hash::make('password'), 'roles' => [2], 'status' => 'active'],
-            ['name' => 'Fajar Nugroho', 'nip' => '10009', 'email' => 'fajar@mail.com', 'password' => Hash::make('password'), 'roles' => [2], 'status' => 'active'],
-            ['name' => 'Gita Gutawa', 'nip' => '10010', 'email' => 'gita@mail.com', 'password' => Hash::make('password'), 'roles' => [3], 'status' => 'active'],
+            ['name' => 'Super Admin', 'nip' => '0000.00001', 'email' => 'super@mail.com', 'password' => Hash::make('password'), 'roles' => [1], 'status' => 'active'],
+            ['name' => 'Admin Utama', 'nip' => '0000.00002', 'email' => 'admin@mail.com', 'password' => Hash::make('password'), 'roles' => [2], 'status' => 'active'],
+            ['name' => 'Sekretaris', 'nip' => '0000.00003', 'email' => 'sekretaris@mail.com', 'password' => Hash::make('password'), 'roles' => [3], 'status' => 'active'],
+            ['name' => 'Budi Santoso', 'nip' => '0000.00004', 'email' => 'budi@mail.com', 'password' => Hash::make('password'), 'roles' => [2], 'status' => 'active'],
+            ['name' => 'Andi Setiawan', 'nip' => '0000.00005', 'email' => 'andi@mail.com', 'password' => Hash::make('password'), 'roles' => [2], 'status' => 'active'],
+            ['name' => 'Citra Dewi', 'nip' => '0000.00006', 'email' => 'citra@mail.com', 'password' => Hash::make('password'), 'roles' => [3], 'status' => 'active'],
+            ['name' => 'Dian Pertiwi', 'nip' => '0000.00007', 'email' => 'dian@mail.com', 'password' => Hash::make('password'), 'roles' => [3], 'status' => 'active'],
+            ['name' => 'Eko Prasetyo', 'nip' => '0000.00008', 'email' => 'eko@mail.com', 'password' => Hash::make('password'), 'roles' => [2], 'status' => 'active'],
+            ['name' => 'Fajar Nugroho', 'nip' => '0000.00009', 'email' => 'fajar@mail.com', 'password' => Hash::make('password'), 'roles' => [2], 'status' => 'active'],
+            ['name' => 'Gita Gutawa', 'nip' => '0000.00010', 'email' => 'gita@mail.com', 'password' => Hash::make('password'), 'roles' => [3], 'status' => 'active'],
         ];
 
         foreach ($usersData as $userData) {
