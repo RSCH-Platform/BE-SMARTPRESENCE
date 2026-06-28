@@ -16,7 +16,7 @@ class BackupController extends Controller
      */
     protected function authorizeSuperAdmin(Request $request): void
     {
-        if ($request->user()->role_id !== 1) {
+        if (!$request->user()->roles->contains('id', 1)) {
             abort(403, 'Hanya Super Admin yang dapat mengakses fitur cadangan.');
         }
     }
@@ -24,6 +24,8 @@ class BackupController extends Controller
     /**
      * GET /api/backups
      * List all backups (paginated).
+     * 
+     * @tags Backup & Restore
      */
     public function index(Request $request): JsonResponse
     {
@@ -64,6 +66,8 @@ class BackupController extends Controller
     /**
      * GET /api/backups/stats
      * Backup statistics.
+     * 
+     * @tags Backup & Restore
      */
     public function stats(Request $request): JsonResponse
     {
@@ -89,6 +93,8 @@ class BackupController extends Controller
     /**
      * POST /api/backup
      * Create a new backup and dispatch the job.
+     * 
+     * @tags Backup & Restore
      */
     public function store(Request $request): JsonResponse
     {
@@ -129,6 +135,8 @@ class BackupController extends Controller
     /**
      * GET /api/backup/{id}/download
      * Download a completed backup file.
+     * 
+     * @tags Backup & Restore
      */
     public function download(Request $request, int $id): mixed
     {
@@ -154,6 +162,8 @@ class BackupController extends Controller
     /**
      * DELETE /api/backup/{id}
      * Delete a backup record and its file.
+     * 
+     * @tags Backup & Restore
      */
     public function destroy(Request $request, int $id): JsonResponse
     {
@@ -176,6 +186,8 @@ class BackupController extends Controller
     /**
      * POST /api/backup/{id}/cancel
      * Cancel a pending backup.
+     * 
+     * @tags Backup & Restore
      */
     public function cancel(Request $request, int $id): JsonResponse
     {

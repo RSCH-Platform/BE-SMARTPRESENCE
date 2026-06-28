@@ -22,11 +22,10 @@ class AuthApiTest extends TestCase
 
     public function test_user_can_login_with_correct_credentials()
     {
-        $user = User::factory()->create([
+        $user = User::factory()->hasAttached(\App\Models\Role::find(1) ?? \App\Models\Role::factory()->create(['id' => 1]))->create([
             'nip' => '1234567890',
             'password' => \Illuminate\Support\Facades\Hash::make('password123'),
             'status' => 'active',
-            'role_id' => 1,
         ]);
 
         $response = $this->postJson('/api/login', [
@@ -44,11 +43,10 @@ class AuthApiTest extends TestCase
 
     public function test_user_cannot_login_with_incorrect_password()
     {
-        $user = User::factory()->create([
+        $user = User::factory()->hasAttached(\App\Models\Role::find(1) ?? \App\Models\Role::factory()->create(['id' => 1]))->create([
             'nip' => '1234567890',
             'password' => \Illuminate\Support\Facades\Hash::make('password123'),
             'status' => 'active',
-            'role_id' => 1,
         ]);
 
         $response = $this->postJson('/api/login', [
@@ -64,11 +62,10 @@ class AuthApiTest extends TestCase
 
     public function test_inactive_user_cannot_login()
     {
-        $user = User::factory()->create([
+        $user = User::factory()->hasAttached(\App\Models\Role::find(1) ?? \App\Models\Role::factory()->create(['id' => 1]))->create([
             'nip' => '0987654321',
             'password' => \Illuminate\Support\Facades\Hash::make('password123'),
             'status' => 'inactive',
-            'role_id' => 1,
         ]);
 
         $response = $this->postJson('/api/login', [
@@ -84,11 +81,10 @@ class AuthApiTest extends TestCase
 
     public function test_user_can_logout()
     {
-        $user = User::factory()->create([
+        $user = User::factory()->hasAttached(\App\Models\Role::find(1) ?? \App\Models\Role::factory()->create(['id' => 1]))->create([
             'nip' => '1234567890',
             'password' => 'password123',
             'status' => 'active',
-            'role_id' => 1,
         ]);
         
         $token = $user->createToken('auth_token')->plainTextToken;

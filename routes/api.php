@@ -15,40 +15,40 @@ use App\Http\Controllers\EmployeeTypeController;
 use App\Http\Controllers\MinutesController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\BackupController;
+use App\Http\Controllers\SystemSettingController;
 
+// ─── Authentication & Public ───────────────────────────────────────────────
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/system-settings/logos', [\App\Http\Controllers\SystemSettingController::class, 'getLogos']);
+Route::get('/system-settings/logos', [SystemSettingController::class, 'getLogos']);
 
+// ─── Protected Routes ──────────────────────────────────────────────────────
 Route::middleware('auth:sanctum')->group(function () {
-    // Route for dashboard
     Route::get('/dashboard', [DashboardController::class, 'index']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    // Route import export employee
+    // Employees
     Route::get('/employees/export', [EmployeeImportExportController::class, 'export']);
     Route::post('/employees/import', [EmployeeImportExportController::class, 'import']);
-    // Route for employees
+    
     Route::get('/employees', [EmployeeController::class, 'index']);
     Route::get('/employee/{id}', [EmployeeController::class, 'show']);
     Route::post('/employee', [EmployeeController::class, 'store']);
     Route::patch('/employee/{id}', [EmployeeController::class, 'update']);
     Route::delete('/employee/{id}', [EmployeeController::class, 'destroy']);
 
-    // Route for dropdown data (jenis tenaga & unit kerja)
+    // Reference Data (Dropdowns)
     Route::get('/employee-types', [EmployeeController::class, 'employeeTypes']);
     Route::get('/work-units', [EmployeeController::class, 'workUnits']);
+    Route::get('/roles', [UserController::class, 'roles']);
 
-    // Route for users
+    // Users
     Route::get('/users', [UserController::class, 'index']);
     Route::get('/user/{id}', [UserController::class, 'show']);
     Route::post('/user', [UserController::class, 'store']);
     Route::patch('/user/{id}', [UserController::class, 'update']);
     Route::delete('/user/{id}', [UserController::class, 'destroy']);
 
-    // Route for dropdown data (roles)
-    Route::get('/roles', [UserController::class, 'roles']);
-
-    // Route for meeting rooms
+    // Meeting Rooms
     Route::get('/meeting-rooms', [MeetingsRoomController::class, 'index']);
     Route::get('/meeting-room/{id}', [MeetingsRoomController::class, 'show']);
     Route::post('/meeting-room', [MeetingsRoomController::class, 'store']);
@@ -56,54 +56,47 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/meeting-room/{id}/toggle-status', [MeetingsRoomController::class, 'toggleStatus']);
     Route::delete('/meeting-room/{id}', [MeetingsRoomController::class, 'destroy']);
 
-    // Route for work units
+    // Work Units (Manage)
     Route::get('/work-units-manage', [WorkUnitController::class, 'index']);
     Route::get('/work-unit/{id}', [WorkUnitController::class, 'show']);
     Route::post('/work-unit', [WorkUnitController::class, 'store']);
     Route::patch('/work-unit/{id}', [WorkUnitController::class, 'update']);
     Route::delete('/work-unit/{id}', [WorkUnitController::class, 'destroy']);
 
-    // Route for employee types (jabatan)
+    // Employee Types (Manage)
     Route::get('/employee-types-manage', [EmployeeTypeController::class, 'index']);
     Route::get('/employee-type/{id}', [EmployeeTypeController::class, 'show']);
     Route::post('/employee-type', [EmployeeTypeController::class, 'store']);
     Route::patch('/employee-type/{id}', [EmployeeTypeController::class, 'update']);
     Route::delete('/employee-type/{id}', [EmployeeTypeController::class, 'destroy']);
 
-    // Route for meetings
+    // Meetings
     Route::get('/meetings', [MeetingController::class, 'index']);
     Route::get('/meeting/{id}', [MeetingController::class, 'show']);
     Route::post('/meeting', [MeetingController::class, 'store']);
     Route::patch('/meeting/{id}', [MeetingController::class, 'update']);
     Route::delete('/meeting/{id}', [MeetingController::class, 'destroy']);
-
-    // Meeting status batch update
     Route::patch('/meetings/update-statuses', [MeetingController::class, 'updateStatuses']);
-
+    
     // Attendance
     Route::post('/meeting/{id}/scan', [MeetingController::class, 'scanBarcode']);
     Route::patch('/meeting/{id}/attendance/{participantId}', [MeetingController::class, 'manualAttendance']);
 
-    // Meeting Minutes (Notulensi Rapat)
+    // Meeting Minutes (Notulensi)
     Route::get('/meeting/{meetingId}/minutes', [MinutesController::class, 'show']);
     Route::post('/meeting/{meetingId}/minutes', [MinutesController::class, 'upsert']);
-
-    // Upload image for Quill editor
     Route::post('/minutes/upload-image', [MinutesController::class, 'uploadImage']);
 
-    // Dokumen rapat (undangan, lampiran, dll.)
+    // Documents
     Route::post('/meeting/{meetingId}/documents', [MinutesController::class, 'uploadDocument']);
     Route::delete('/meeting/{meetingId}/documents/{documentId}', [MinutesController::class, 'deleteDocument']);
 
-    // ─── Laporan Rapat (Dashboard Sekretaris) ────────────────────────────────────
-    // Daftar rapat + status kelengkapan lampiran (filter: search, date, status)
+    // Laporan (Reports)
     Route::get('/laporan/rapat', [LaporanController::class, 'index']);
-    // Detail satu rapat: peserta, kehadiran, notulensi, dokumen
     Route::get('/laporan/rapat/{id}', [LaporanController::class, 'show']);
-    // Export data rapat lengkap (untuk FE generate PDF)
     Route::get('/laporan/rapat/{id}/export', [LaporanController::class, 'export']);
 
-    // ─── Backup / Cadangan (SuperAdmin only – checked in controller) ─────────
+    // Backups
     Route::get('/backups', [BackupController::class, 'index']);
     Route::get('/backups/stats', [BackupController::class, 'stats']);
     Route::post('/backup', [BackupController::class, 'store']);
@@ -111,6 +104,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/backup/{id}/cancel', [BackupController::class, 'cancel']);
     Route::delete('/backup/{id}', [BackupController::class, 'destroy']);
 
-    // Ubah Logo (Super Admin)
-    Route::post('/logo/upload', [\App\Http\Controllers\SystemSettingController::class, 'uploadLogo']);
+    // System Settings
+    Route::post('/logo/upload', [SystemSettingController::class, 'uploadLogo']);
 });

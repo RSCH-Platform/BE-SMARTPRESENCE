@@ -24,11 +24,10 @@ class UserApiTest extends TestCase
         DB::table('roles')->insert(['id' => 1, 'role' => 'super_admin']);
         DB::table('roles')->insert(['id' => 2, 'role' => 'admin']);
         
-        $this->adminUser = User::factory()->create([
+        $this->adminUser = User::factory()->hasAttached(\App\Models\Role::find(1) ?? \App\Models\Role::factory()->create(['id' => 1]))->create([
             'name' => 'admin',
             'password' => \Illuminate\Support\Facades\Hash::make('password123'),
             'status' => 'active',
-            'role_id' => 1,
         ]);
         
         $this->token = $this->adminUser->createToken('auth_token')->plainTextToken;
@@ -36,7 +35,7 @@ class UserApiTest extends TestCase
 
     public function test_can_fetch_users_list()
     {
-        User::factory()->count(3)->create(['role_id' => 1]);
+        User::factory()->count(3)->hasAttached(\App\Models\Role::find(1) ?? \App\Models\Role::factory()->create(['id' => 1]))->create();
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $this->token,
@@ -53,8 +52,8 @@ class UserApiTest extends TestCase
 
     public function test_can_search_users_by_name()
     {
-        User::factory()->create(['name' => 'Budi Santoso', 'role_id' => 1]);
-        User::factory()->create(['name' => 'Andi Susanto', 'role_id' => 1]);
+        User::factory()->hasAttached(\App\Models\Role::find(1) ?? \App\Models\Role::factory()->create(['id' => 1]))->create(['name' => 'Budi Santoso']);
+        User::factory()->hasAttached(\App\Models\Role::find(1) ?? \App\Models\Role::factory()->create(['id' => 1]))->create(['name' => 'Andi Susanto']);
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $this->token,
@@ -69,8 +68,10 @@ class UserApiTest extends TestCase
     {
         $payload = [
             'name' => 'New User',
+            'email' => 'newuser@example.com',
+            'nip' => '9999999999',
             'password' => 'password',
-            'role_id' => 2,
+            'roles' => [2],
         ];
 
         $response = $this->withHeaders([
@@ -87,7 +88,7 @@ class UserApiTest extends TestCase
 
     public function test_can_show_user_detail()
     {
-        $user = User::factory()->create(['name' => 'Detail User', 'role_id' => 1]);
+        $user = User::factory()->hasAttached(\App\Models\Role::find(1) ?? \App\Models\Role::factory()->create(['id' => 1]))->create(['name' => 'Detail User']);
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $this->token,
@@ -99,11 +100,11 @@ class UserApiTest extends TestCase
 
     public function test_can_update_user()
     {
-        $user = User::factory()->create(['name' => 'Old Name', 'role_id' => 2]);
+        $user = User::factory()->hasAttached(\App\Models\Role::find(2) ?? \App\Models\Role::factory()->create(['id' => 2]))->create(['name' => 'Old Name']);
 
         $payload = [
             'name' => 'New Name Updated',
-            'role_id' => 2,
+            'roles' => [2],
         ];
 
         $response = $this->withHeaders([
@@ -124,7 +125,7 @@ class UserApiTest extends TestCase
         // Try to update the adminUser (role_id 1)
         $payload = [
             'name' => 'Attempt Update',
-            'role_id' => 2,
+            'roles' => [2],
         ];
 
         $response = $this->withHeaders([
@@ -139,7 +140,7 @@ class UserApiTest extends TestCase
 
     public function test_can_delete_user()
     {
-        $user = User::factory()->create(['name' => 'To Be Deleted', 'role_id' => 2]);
+        $user = User::factory()->hasAttached(\App\Models\Role::find(2) ?? \App\Models\Role::factory()->create(['id' => 2]))->create(['name' => 'To Be Deleted']);
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $this->token,

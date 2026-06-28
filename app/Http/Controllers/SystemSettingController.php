@@ -12,6 +12,8 @@ class SystemSettingController extends Controller
     /**
      * Ambil data logo saat ini (Public Route).
      * GET /api/system-settings/logos
+     * 
+     * @tags System Settings
      */
     public function getLogos()
     {
@@ -41,12 +43,14 @@ class SystemSettingController extends Controller
     /**
      * Upload logo baru (Protected Route - Super Admin).
      * POST /api/logo/upload
+     * 
+     * @tags System Settings
      */
     public function uploadLogo(Request $request)
     {
         try {
             // 1. Cek otentikasi & otorisasi
-            if (!$request->user() || $request->user()->role_id !== 1) {
+            if (!$request->user() || !$request->user()->roles->contains('id', 1)) {
                 return response()->json([
                     'message' => 'Hanya Super Admin yang diperbolehkan mengubah logo'
                 ], 403);

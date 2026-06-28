@@ -26,7 +26,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = User::with('role');
+            $query = User::with('roles');
 
             // Search berdasarkan name
             if ($request->filled('search')) {
@@ -36,7 +36,10 @@ class UserController extends Controller
 
             // Filter berdasarkan role
             if ($request->filled('role_id')) {
-                $query->where('role_id', $request->query('role_id'));
+                $roleId = $request->query('role_id');
+                $query->whereHas('roles', function($q) use ($roleId) {
+                    $q->where('roles.id', $roleId);
+                });
             }
 
             $perPage = $request->query('per_page', 25);
@@ -67,8 +70,12 @@ class UserController extends Controller
             $validated = $request->validated();
             $validated['password'] = \Illuminate\Support\Facades\Hash::make($validated['password']);
 
+            $roles = $validated['roles'];
+            unset($validated['roles']);
+
             $result = User::create($validated);
-            $result->load('role');
+            $result->roles()->attach($roles);
+            $result->load('roles');
 
             return response()->json([
                 'message' => 'User created successfully',
@@ -93,7 +100,7 @@ class UserController extends Controller
     public function show(string $id)
     {
         try {
-            $result = User::with('role')->find($id);
+            $result = User::with('roles')->find($id);
             if (!$result) {
                 return response()->json([
                     'message' => 'User not found',
@@ -131,7 +138,7 @@ class UserController extends Controller
                 ], 404);
             }
 
-            if ($result->role_id === 1) {
+            if ($result->roles->contains('id', 1)) {
                 return response()->json([
                     'message' => 'Super Admin tidak dapat diedit',
                 ], 403);
@@ -145,8 +152,15 @@ class UserController extends Controller
                 $validated['password'] = \Illuminate\Support\Facades\Hash::make($validated['password']);
             }
 
-            $result->update($validated);
-            $result->load('role');
+            if (isset($validated['roles'])) {
+                $roles = $validated['roles'];
+                unset($validated['roles']);
+                $result->update($validated);
+                $result->roles()->sync($roles);
+            } else {
+                $result->update($validated);
+            }
+            $result->load('roles');
 
             return response()->json([
                 'message' => 'User updated successfully',
@@ -180,7 +194,7 @@ class UserController extends Controller
             }
 
             // Hanya super_admin yang tidak bisa dihapus
-            if ($result->role_id === 1) {
+            if ($result->roles->contains('id', 1)) {
                 return response()->json([
                     'message' => 'Super Admin tidak dapat dihapus',
                 ], 403);
