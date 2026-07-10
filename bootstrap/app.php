@@ -16,10 +16,25 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->statefulApi();
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-            $exceptions->reportable(function (\Illuminate\Auth\AuthenticationException $e) {
-                \Illuminate\Support\Facades\Log::error("Authentication error: " . $e->getMessage(), ["trace" => $e->getTraceAsString()]);
-            });
-         $exceptions->shouldRenderJsonWhen(function (\Illuminate\Http\Request $request, \Throwable $e) {
+        $exceptions->reportable(function (\Illuminate\Auth\AuthenticationException $e, \Illuminate\Http\Request $request) {
+            \Illuminate\Support\Facades\Log::warning('[DEBUG] 401 AuthenticationException — auth:sanctum gagal', [
+                'url'                      => $request->fullUrl(),
+                'method'                   => $request->method(),
+                'request_host'             => $request->getHost(),
+                'request_origin'           => $request->header('Origin'),
+                'has_authorization_header' => $request->hasHeader('Authorization'),
+                'cookies_received'         => array_keys($request->cookies->all()),
+                'session_id'               => $request->session()->getId(),
+                'session_has_data'         => !empty($request->session()->all()),
+                'guard_web_check'          => \Illuminate\Support\Facades\Auth::guard('web')->check(),
+                'sanctum_stateful_domains' => config('sanctum.stateful'),
+                'iam_enabled'              => config('iam.enabled'),
+                'exception_message'        => $e->getMessage(),
+                'guards'                   => $e->guards(),
+            ]);
+        });
+
+        $exceptions->shouldRenderJsonWhen(function (\Illuminate\Http\Request $request, \Throwable $e) {
             if ($request->is('api/*')) {
                 return true;
             }

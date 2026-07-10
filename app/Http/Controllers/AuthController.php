@@ -80,13 +80,37 @@ class AuthController extends Controller
      */
     public function me(Request $request)
     {
-        \Illuminate\Support\Facades\Log::info('auth/me request received', [
-            'headers' => $request->headers->all(),
-            'cookies' => $request->cookies->all(),
-            'session_id' => $request->session()->getId(),
+        \Illuminate\Support\Facades\Log::info('[DEBUG] auth/me dipanggil', [
+            // Apakah ada Bearer token di header?
+            'has_authorization_header' => $request->hasHeader('Authorization'),
+            'authorization'            => $request->header('Authorization') ? 'Bearer ***' : null,
+
+            // Cookie yang masuk
+            'cookies'                  => array_keys($request->cookies->all()),
+
+            // Session info
+            'session_id'               => $request->session()->getId(),
+            'session_has_data'         => !empty($request->session()->all()),
+
+            // Guard aktif
+            'guard_web_check'          => \Illuminate\Support\Facades\Auth::guard('web')->check(),
+            'guard_sanctum_check'      => \Illuminate\Support\Facades\Auth::guard('sanctum')->check(),
+
+            // User dari request (via sanctum middleware)
+            'user_from_request'        => optional($request->user())->id ?? 'null (tidak terautentikasi)',
+
+            // IAM config
+            'iam_enabled'              => config('iam.enabled'),
+            'sanctum_stateful_domains' => config('sanctum.stateful'),
+
+            // Request info
+            'request_host'             => $request->getHost(),
+            'request_origin'           => $request->header('Origin'),
         ]);
+
         $user = $request->user();
         $user->load('roles');
+
         return response()->json([
             'user' => $user
         ]);
