@@ -16,7 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->statefulApi();
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->reportable(function (\Illuminate\Auth\AuthenticationException $e, \Illuminate\Http\Request $request) {
+        $exceptions->renderable(function (\Illuminate\Auth\AuthenticationException $e, \Illuminate\Http\Request $request) {
             \Illuminate\Support\Facades\Log::warning('[DEBUG] 401 AuthenticationException — auth:sanctum gagal', [
                 'url'                      => $request->fullUrl(),
                 'method'                   => $request->method(),
@@ -32,6 +32,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 'exception_message'        => $e->getMessage(),
                 'guards'                   => $e->guards(),
             ]);
+            // Biarkan Laravel yang render response aslinya
         });
 
         $exceptions->shouldRenderJsonWhen(function (\Illuminate\Http\Request $request, \Throwable $e) {
