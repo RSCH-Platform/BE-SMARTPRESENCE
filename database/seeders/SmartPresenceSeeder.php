@@ -22,7 +22,7 @@ class SmartPresenceSeeder extends Seeder
         DB::table('roles')->insert([
             ['id'=>1,'role'=>'super_admin'],
             ['id'=>2,'role'=>'admin'],
-            ['id'=>3,'role'=>'sekretatris']
+            ['id'=>3,'role'=>'sekretaris']
         ]);
 
 
