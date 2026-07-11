@@ -29,7 +29,7 @@ class EmployeeController extends Controller
             $query = Employee::select('id', 'full_name', 'nip', 'employee_type_id', 'work_unit_id', 'phone', 'email', 'signature_path')
                 ->with([
                     'employeeType:id,employee_type',
-                    'workUnit:id,work_unit'
+                    'workUnit:id,unit_name'
                 ]);
 
             // Search berdasarkan nama atau NIP
@@ -245,7 +245,7 @@ class EmployeeController extends Controller
     {
         try {
             $result = Cache::rememberForever('work_units', function () {
-                $units = WorkUnit::select('id', 'work_unit')->get();
+                $units = WorkUnit::select('id', 'unit_name as work_unit')->get();
                 
                 // Tambahkan opsi "none" untuk karyawan tanpa unit kerja
                 $noneOption = (object)[
