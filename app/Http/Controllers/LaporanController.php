@@ -210,7 +210,7 @@ class LaporanController extends Controller
             $meeting = Meeting::with([
                 'room:id,name,location',
                 'participants.employee:id,full_name,nip,work_unit_id,signature_path',
-                'participants.employee.workUnit:id,work_unit',
+                'participants.employee.workUnit:id,unit_name',
                 'attendances:id,meeting_id,employee_id,check_in_time,status',
                 'minutes',
                 'documents',
@@ -237,7 +237,7 @@ class LaporanController extends Controller
                 return [
                     'nama'        => $p->employee?->full_name ?? 'Karyawan (Dihapus)',
                     'nip'         => $p->employee?->nip ?? '-',
-                    'unit_kerja'  => $p->employee?->workUnit?->work_unit ?? '-',
+                    'unit_kerja'  => $p->employee?->workUnit?->unit_name ?? '-',
                     'status'      => $attendance ? 'Hadir' : 'Tidak Hadir',
                     'check_in'    => $attendance?->check_in_time,
                     'signature_url' => $p->employee?->signature_url,
