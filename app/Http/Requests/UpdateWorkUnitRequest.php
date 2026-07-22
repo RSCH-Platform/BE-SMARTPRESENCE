@@ -18,7 +18,7 @@ class UpdateWorkUnitRequest extends FormRequest
         $workUnitId = $this->route('id');
 
         return [
-            'unit_name' => 'required|string|max:150|unique:work_units,work_unit,' . $workUnitId,
+            'unit_name' => 'required|string|max:150|unique:work_units,unit_name,' . $workUnitId,
         ];
     }
 

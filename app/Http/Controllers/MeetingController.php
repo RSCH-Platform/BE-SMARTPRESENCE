@@ -141,7 +141,7 @@ class MeetingController extends Controller
             $meeting = Meeting::with([
                 'room:id,name,location',
                 'participants.employee:id,full_name,nip,work_unit_id',
-                'participants.employee.workUnit:id,work_unit',
+                'participants.employee.workUnit:id,unit_name',
                 'attendances:id,meeting_id,employee_id,check_in_time,status',
             ])->find($id);
 

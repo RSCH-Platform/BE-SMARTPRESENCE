@@ -20,7 +20,7 @@ class EmployeesImport implements ToModel, WithHeadingRow
     {
         // Cache data untuk performa lebih baik saat lookup ribuan baris
         $this->employeeTypes = EmployeeType::all()->pluck('id', 'employee_type')->toArray();
-        $this->workUnits = WorkUnit::all()->pluck('id', 'work_unit')->toArray();
+        $this->workUnits = WorkUnit::all()->pluck('id', 'unit_name')->toArray();
 
     }
 

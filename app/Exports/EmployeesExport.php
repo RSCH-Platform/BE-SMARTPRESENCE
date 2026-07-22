@@ -47,7 +47,7 @@ class EmployeesExport implements FromQuery, WithHeadings, WithMapping, ShouldAut
             $employee->email,
             $employee->phone,
             $employee->employeeType ? $employee->employeeType->employee_type : '-',
-            $employee->workUnit ? $employee->workUnit->work_unit : '-',
+            $employee->workUnit ? $employee->workUnit->unit_name : '-',
 
             $employee->is_active ? 'Aktif' : 'Non-Aktif',
         ];
