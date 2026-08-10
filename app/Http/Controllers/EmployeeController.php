@@ -49,11 +49,8 @@ class EmployeeController extends Controller
             // Filter berdasarkan unit kerja
             if ($request->filled('work_unit_id')) {
                 $workUnitId = $request->query('work_unit_id');
-                // Jika work_unit_id null atau "none", tampilkan hanya karyawan tanpa unit kerja
-                if ($workUnitId === 'All' || $workUnitId === null) {
-                    $query->whereNull('work_unit_id');
-                } else {
-                    // Jika ada unit kerja spesifik, tampilkan hanya karyawan dari unit itu
+                // Jika 'All', tidak perlu filter — tampilkan semua karyawan
+                if ($workUnitId !== 'All') {
                     $query->where('work_unit_id', $workUnitId);
                 }
             }
@@ -174,7 +171,7 @@ class EmployeeController extends Controller
             $result->update($validated);
             $result->load(['employeeType', 'workUnit']);
 
-            $this->clearEmployeeCache();
+            $this->clearEmployeeCache($id);
 
             return response()->json([
                 'message' => 'Employee updated successfully',
@@ -204,7 +201,7 @@ class EmployeeController extends Controller
             // Soft delete — file signature tetap tersimpan agar bisa di-restore
             $result->delete();
 
-            $this->clearEmployeeCache();
+            $this->clearEmployeeCache($id);
 
             return response()->json([
                 'message' => 'Employee deleted successfully',
@@ -270,10 +267,14 @@ class EmployeeController extends Controller
 
     /**
      * Clear all employee-related cache keys.
+     * Jika $id diberikan, hapus juga cache detail karyawan tersebut.
      */
-    private function clearEmployeeCache(): void
+    private function clearEmployeeCache(?string $id = null): void
     {
         Cache::forget('employee_types');
         Cache::forget('work_units');
+        if ($id !== null) {
+            Cache::forget('employees_show_' . $id);
+        }
     }
 }

@@ -33,10 +33,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/employees/import', [EmployeeImportExportController::class, 'import']);
     
     Route::get('/employees', [EmployeeController::class, 'index']);
-    Route::get('/employee/{id}', [EmployeeController::class, 'show']);
-    Route::post('/employee', [EmployeeController::class, 'store']);
-    Route::patch('/employee/{id}', [EmployeeController::class, 'update']);
-    Route::delete('/employee/{id}', [EmployeeController::class, 'destroy']);
+    Route::get('/employees/{id}', [EmployeeController::class, 'show']);
+    Route::post('/employees', [EmployeeController::class, 'store']);
+    Route::patch('/employees/{id}', [EmployeeController::class, 'update']);
+    Route::delete('/employees/{id}', [EmployeeController::class, 'destroy']);
 
     // Reference Data (Dropdowns)
     Route::get('/employee-types', [EmployeeController::class, 'employeeTypes']);

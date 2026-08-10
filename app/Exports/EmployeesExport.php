@@ -12,7 +12,6 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class EmployeesExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSize, WithStyles
 {
-    private $rowNumber = 0;
 
     /**
     * @return \Illuminate\Database\Eloquent\Builder
@@ -25,7 +24,6 @@ class EmployeesExport implements FromQuery, WithHeadings, WithMapping, ShouldAut
     public function headings(): array
     {
         return [
-            'No',
             'Nama Lengkap',
             'NIK',
             'Email',
@@ -38,17 +36,13 @@ class EmployeesExport implements FromQuery, WithHeadings, WithMapping, ShouldAut
 
     public function map($employee): array
     {
-        $this->rowNumber++;
-
         return [
-            $this->rowNumber,
             $employee->full_name,
             $employee->nip,
             $employee->email,
             $employee->phone,
             $employee->employeeType ? $employee->employeeType->employee_type : '-',
             $employee->workUnit ? $employee->workUnit->unit_name : '-',
-
             $employee->is_active ? 'Aktif' : 'Non-Aktif',
         ];
     }

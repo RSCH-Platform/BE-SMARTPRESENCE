@@ -9,6 +9,7 @@ use App\Models\WorkUnit;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class EmployeesImport implements ToModel, WithHeadingRow
 {
@@ -38,14 +39,20 @@ class EmployeesImport implements ToModel, WithHeadingRow
 
         $nip = trim($row['nik']);
 
-        // Lookup ID relasi berdasarkan nama dari Excel (fallback menggunakan id default 1 jika tidak ditemukan/matching)
+        // Lookup ID relasi berdasarkan nama dari Excel
         $employeeTypeName = trim($row['jenis_tenaga'] ?? '');
-        $employeeTypeId = $this->employeeTypes[$employeeTypeName] ?? 1; 
+        if (!isset($this->employeeTypes[$employeeTypeName])) {
+            // Jenis tenaga tidak ditemukan — lewati baris ini dan catat peringatan
+            Log::warning('EmployeesImport: jenis tenaga tidak ditemukan, baris dilewati.', [
+                'nik'          => $nip,
+                'jenis_tenaga' => $employeeTypeName,
+            ]);
+            return null;
+        }
+        $employeeTypeId = $this->employeeTypes[$employeeTypeName];
 
         $workUnitName = trim($row['unit_kerja'] ?? '');
         $workUnitId = $this->workUnits[$workUnitName] ?? null;
-
-
 
         $isActive = true;
         $statusStr = strtolower(trim($row['status_aktif'] ?? 'aktif'));
