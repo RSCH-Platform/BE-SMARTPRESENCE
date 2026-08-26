@@ -242,7 +242,7 @@ class EmployeeController extends Controller
     {
         try {
             $result = Cache::rememberForever('work_units', function () {
-                $units = WorkUnit::select('id', 'unit_name as work_unit')->get();
+                $units = WorkUnit::select('id', 'unit_name')->get();
                 
                 // Tambahkan opsi "none" untuk karyawan tanpa unit kerja
                 $noneOption = (object)[
